@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Story Desk">
+<meta name="theme-color" content="#f3eee4">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Story Desk</title>
+<style>:root{
+  --paper:#f3eee4; --card:#fbf8f2; --ink:#1e1c19; --mute:#6f675c; --line:#d9d0c0;
+  --amber:#a8561a; --amber-soft:#f0dcc4; --ok:#3d6b4f; --warn:#9a3b2e; --chip:#e9e1d2;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --fs:18px;
+}
+html[data-theme="dark"]{
+  --paper:#141210; --card:#1d1a17; --ink:#ece5d8; --mute:#9a9082; --line:#35302a;
+  --amber:#e09a4f; --amber-soft:#3a2a18; --ok:#7fb894; --warn:#e0806f; --chip:#2a2621;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:var(--fs);line-height:1.45;-webkit-text-size-adjust:100%}
+body{display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
+button{font:inherit;color:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:.6em .95em;min-height:44px}
+button:active{transform:translateY(1px)}
+button.primary{background:var(--amber);border-color:var(--amber);color:#fff;font-weight:600}
+html[data-theme="dark"] button.primary{color:#1a1410}
+button.ghost{background:transparent;border-color:transparent;color:var(--mute)}
+button.small{min-height:36px;padding:.35em .7em;font-size:.85em}
+button.danger{color:var(--warn)}
+button[disabled]{opacity:.45}
+input,textarea,select{font:inherit;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.6em .7em;width:100%}
+textarea{font-family:var(--serif);line-height:1.5;resize:vertical}
+textarea:focus,input:focus{outline:2px solid var(--amber);outline-offset:1px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;margin:.2em 0 .4em}
+h1{font-size:1.5em} h2{font-size:1.2em} h3{font-size:1.02em}
+a{color:var(--amber)}
+#app{flex:1;display:flex;min-height:0}
+nav{display:flex;flex-direction:column;gap:2px;padding:10px 6px;border-right:1px solid var(--line);width:104px;flex:none;overflow:auto}
+nav button{border:none;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72em;color:var(--mute);padding:.6em .2em;border-radius:12px}
+nav button .ic{font-size:1.7em;line-height:1;font-family:var(--serif)}
+nav button.on{background:var(--amber-soft);color:var(--ink)}
+main{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:18px 22px calc(40px + env(safe-area-inset-bottom))}
+.wrap{max-width:780px;margin:0 auto}
+@media (max-width:820px){
+  #app{flex-direction:column-reverse}
+  nav{flex-direction:row;width:auto;border-right:none;border-top:1px solid var(--line);padding:4px 4px calc(4px + env(safe-area-inset-bottom));justify-content:space-around;overflow:visible}
+  nav button{flex:1;font-size:.66em}
+  main{padding:14px 14px 30px}
+}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 14px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row.between{justify-content:space-between}
+.grow{flex:1}
+.mute{color:var(--mute)} .sm{font-size:.84em} .xs{font-size:.74em}
+.kicker{font-size:.72em;letter-spacing:.09em;text-transform:uppercase;color:var(--amber);font-weight:700}
+.q{font-family:var(--serif);font-size:1.42em;line-height:1.32;margin:.25em 0 .5em}
+.why{border-left:3px solid var(--amber-soft);padding:.1em 0 .1em .8em;color:var(--mute);font-size:.9em;margin:.4em 0 .8em}
+.chip{display:inline-flex;align-items:center;gap:.3em;background:var(--chip);border-radius:999px;padding:.18em .7em;font-size:.76em;color:var(--mute);border:none;min-height:0}
+button.chip{min-height:34px;padding:.3em .85em;color:var(--ink)}
+.chip.on{background:var(--amber);color:#fff}
+.probe{border:1px dashed var(--amber);border-radius:12px;padding:12px 14px;margin:10px 0;background:transparent}
+.probe .pq{font-family:var(--serif);font-size:1.12em;margin:0 0 .5em}
+.trip{border-left:4px solid var(--warn);background:var(--card);padding:10px 12px;border-radius:8px;margin:10px 0;font-size:.92em}
+.ans{white-space:pre-wrap;font-family:var(--serif);margin:.3em 0}
+.bar{height:6px;background:var(--chip);border-radius:6px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--amber)}
+.list>.item{padding:12px 4px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.list>.item:last-child{border-bottom:none}
+.dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--mute);flex:none;margin-top:.45em}
+.dot.done{background:var(--ok);border-color:var(--ok)} .dot.later{background:var(--amber);border-color:var(--amber)} .dot.skip{background:var(--mute)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px}
+.tabs button{white-space:nowrap;border-radius:999px;min-height:38px;padding:.3em .9em;font-size:.86em}
+.tabs button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+label.f{display:block;font-size:.74em;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin:.9em 0 .25em;font-weight:600}
+.hint{font-size:.8em;color:var(--mute);margin:.2em 0 .1em;font-style:italic}
+.scene{position:relative}
+.scene .num{font-family:var(--serif);font-size:1.5em;color:var(--amber);min-width:1.6em}
+.link{font-size:.8em;color:var(--mute);margin:-6px 0 8px 28px}
+.link.bad{color:var(--warn)}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:.6em 1.1em;border-radius:999px;font-size:.88em;z-index:50;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--paper);width:100%;max-width:820px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:18px 20px calc(24px + env(safe-area-inset-bottom))}
+.rec{color:var(--warn);font-weight:700}
+.pulse{animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.spark{font-family:var(--serif);font-size:1.3em;line-height:1.35;min-height:5em}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:600px){.grid2{grid-template-columns:1fr}}
+hr{border:none;border-top:1px solid var(--line);margin:14px 0}
+details>summary{cursor:pointer;color:var(--mute);font-size:.88em;padding:.3em 0}
+.seed{font-size:.7em;border:1px solid var(--line);border-radius:4px;padding:0 .35em;color:var(--mute);vertical-align:middle}
+</style>
+</head>
+<body>
+<div id="app"><nav id="nav"></nav><main id="main"></main></div>
+<div id="toast" class="toast"></div>
+<script>(function(){
+var Q=[], n={};
+function q(stage, track, text, why, probes, file){ n[stage]=(n[stage]||0)+1; Q.push({id:stage+'-'+n[stage], stage:stage, track:track, q:text, why:why||'', probes:probes||[], file:file||null}); }
+function F(id, field){ return {id:id, field:field}; }
+var E=[];
+function e(id, type, name, fields, aliases){ E.push({id:id, type:type, name:name, aliases:aliases||[], fields:fields||{}, seeded:true}); }
+var JULY='July 2026 concept note', MARCH='March 2026 Armando plan (the earlier, realist version)';
+
+/* ================= SEED: only what is already in your Drive ================= */
+e('book','book','Exempt',{
+  premise:'', idea:'', ridicule:'', refuse:'', shape:'', ending:'', pov:'', clock:'Chapter 1 covers a 36-hour limbo. The span of the whole book is undecided.', length:'Described in July as a short novel. No word target set. (The March plan was 30 scenes, 70,000 words.)',
+  relation:'Undecided. Two Armandos exist in your notes: the March realist novel (frozen presentation, Europe, the father in Panama, ends with him cooking) and the July dystopian Exempt.'},['the book','the novel']);
+e('armando','character','Armando',{
+  role:'Protagonist. In July: a technology leader who just landed a significant new job; comfortable, well paid, not paying attention to how his consumption was scored. A careless beneficiary of the system, not its victim.',
+  want:'', weakness:'July: inattention. He did this to himself, without malice or misfortune. March: mimetic desire, a life built around what he was supposed to want. Whether these are the same flaw is open.',
+  answer:'', contradiction:'', detail:'Owns a Sinn 856. March version: 50, Panamanian-American, Seattle, likes tech toys and a fast, expensive, unflashy car; does not mind impressing people.', knows:'Does not know what he typed that tripped the system. Will eventually reconstruct it. Never recovers what the guard said.', fate:''});
+e('guard1','character','Guard with the card',{role:'Prisoner-guard, a higher-tier asset with an orange-flickering wristband. Reads the override code off a laminated card and misreads a digit.', want:'', weakness:'', answer:'', contradiction:'', detail:'', knows:'', fate:'Says something offhand on the way out that is swallowed by the food cart. Never recovered.'},['first guard']);
+e('guard2','character','Guard who corrects',{role:'Second prisoner-guard. Gives the flat correction. Mildly annoyed, as at a self-checkout asking for an override.', want:'', weakness:'', answer:'', contradiction:'', detail:'', knows:'', fate:''},['second guard','other guard']);
+e('clients','character','The clients',{role:'People outside who buy Focus Credits and receive the typed streams for grounding. Unseen so far.', want:'', weakness:'', answer:'', contradiction:'', detail:'', knows:'', fate:''},['client','buyers','consumers']);
+e('partner','character','The attorney',{role:'From the March plan only: his girlfriend, a high-status government attorney. A good match on paper; good, not great. Not yet placed in Exempt.', want:'', weakness:'', answer:'', contradiction:'', detail:'', knows:'', fate:''},['girlfriend','the lawyer']);
+e('father','character','The father',{role:'From the March plan and your older stories: an overbearing father, immigrant from Panama, the unresolved confrontation. Not yet placed in Exempt.', want:'', weakness:'', answer:'', contradiction:'', detail:'', knows:'', fate:''},['his father','dad']);
+
+e('r-market','rule','The Mindfulness Offset Market',{plain:'A background ledger. The very wealthy buy Cognitive Detachment Credits or Raw Presence Streams to offset high-consumption, high-anxiety lives.', official:'Mindfulness Offset Market; Cognitive Detachment Credits; Raw Presence Streams; Focus Credits', cost:'', disclosure:'Your rule: never explained directly. The reader infers it from his memories and from the clinical reality of returned items.'},['Offset Market','the market','the ledger']);
+e('r-reclass','rule','Reclassification',{plain:'High-asset people who over-consume can be reclassified by algorithm as Negative Space Weights: not punishment exactly, a rebalancing entry on someone else’s ledger. For Armando the Sinn purchase was the marginal push, flagged for price and for the carbon footprint of its metallurgy and supply chain.', official:'Negative Space Weight', cost:'', disclosure:''},['reclassified','Negative Space Weights']);
+e('r-stream','rule','The stream',{plain:'Reclassified subjects are shackled to concrete plinths and type on mechanical typewriters under a camera lens when a light signal flashes. The raw stream goes in real time to clients.', official:'', cost:'', disclosure:''},['streams','the plinth']);
+e('r-exempt','rule','EXEMPT',{plain:'Something he typed satisfied an absurd, over-literal parsing condition and read as total disengagement. He destroyed his economic utility by accident. A clerical fluke, not transcendence.', official:'EXEMPT', cost:'', disclosure:''},['exemption','exempted']);
+e('r-guards','rule','Prisoner-guards',{plain:'Guards are themselves higher-tier assets. The release is a rare procedure they are unfamiliar with.', official:'', cost:'', disclosure:''},['prisoner-guards','tiers']);
+
+e('p-cell','place','The plinth room',{senses:'Concrete plinth, shackle with a numeric lock, bolted typewriter, camera iris, indicator light, an amber-lit doorway, a food cart in the hall. Brutalist and isolated (the Harpman influence).', func:'Where the stream is produced; where chapter 1 happens.', scenes:'Chapter 1.'},['the cell','the facility']);
+
+e('o-sinn','object','The Sinn 856',{literal:'A pilot watch. Not Rolex-tier. Real meaning and mild status inside a watch subculture; still wholly unnecessary. Returned to him on a tray: pristine, ticking, synchronized, month ambiguous.', appearances:'1. Bought before the book: the marginal push. 2. Returned in chapter 1.', final:'', guard:'Never used to time or track intervals. Identity anchor only. The Sinn / sin echo appears once, early, unremarked.'},['the watch','Sinn']);
+e('o-typewriter','object','The typewriter',{literal:'Mechanical. Keys lock solid mid-stroke. Unbolted with ordinary tools and hauled out.', appearances:'Chapter 1 only so far.', final:'', guard:'Its removal is facilities work, not ceremony.'},['typewriter']);
+e('o-card','object','The laminated card',{literal:'Procedure card carrying the numeric override code for his shackle.', appearances:'Chapter 1.', final:'', guard:''},['laminated card','procedure card']);
+e('o-cart','object','The food cart',{literal:'Its mechanical thump in the hall swallows the guard’s words.', appearances:'Chapter 1.', final:'', guard:''},['food cart','the cart']);
+e('o-light','object','The lens and the light',{literal:'Camera iris stays open after the keys lock; the indicator light goes cold. Guards’ wristbands flicker orange. The doorway is amber.', appearances:'Chapter 1.', final:'', guard:''},['indicator light','camera','wristbands']);
+
+e('t-sentence','thread','What did he type?',{question:'The sentence that tripped the system.', planted:'Chapter 1: the keys lock mid-sentence.', paid:'Somewhere later he reconstructs it and understands why. Placement undecided.', status:'Open. Must be paid. Your rule: it lands as bathos, smaller than what it caused.'},['trigger sentence','the sentence']);
+e('t-guard','thread','What did the guard say?',{question:'The offhand comment swallowed by the food cart.', planted:'Chapter 1.', paid:'Never.', status:'Deliberately unanswered. Your rule: later chapters must not resolve it.'},['ghost syllables']);
+e('t-month','thread','How long has he been inside?',{question:'The watch comes back with the month ambiguous.', planted:'Chapter 1.', paid:'', status:'Open. Undecided.'});
+e('t-after','thread','What does EXEMPT let him do?',{question:'He stands unchained in an open doorway. Then what?', planted:'End of chapter 1.', paid:'', status:'Open. This is the rest of the book.'});
+
+e('d-pace','decision','Slow, quiet, 36 hours of unease',{decision:'Hyper-focused on immediate physical detail. The limbo is psychological disorientation and rule-guessing, not bodily collapse. Hunger and thirst are background pressure.', why:JULY, replaced:'An earlier four-day version.'});
+e('d-expo','decision','Never explain the economics',{decision:'The reader infers the market. No direct exposition.', why:JULY, replaced:''});
+e('d-pity','decision','No retroactive self-pity',{decision:'He did this through inattention. The prose keeps a thread of dramatic irony and does not slide into victimhood.', why:JULY, replaced:''});
+e('d-guards','decision','Guards are confused, not guilty',{decision:'Petty procedural friction. Few lines. The gap between their annoyance and his stakes is where the comedy and the horror live.', why:JULY, replaced:''});
+e('d-bathos','decision','The reveal is bathos',{decision:'The trigger sentence reads as mundane or faintly embarrassing. Resist making it retroactively beautiful or true.', why:JULY, replaced:''});
+e('d-closure','decision','Closure on theme, not on scene',{decision:'He comes to understand what he wrote. He never learns what the guard said or reads the guard’s expression.', why:JULY, replaced:''});
+e('d-march-end','decision','March ending: content, not transformed',{decision:'In the earlier version he ends in not a very different place, just more at peace: smaller work, mentoring, cooking, no new woman.', why:MARCH+'. Unconfirmed for Exempt.', replaced:''});
+
+e('sh-bench','shard','The bench and the spilled coffee',{what:'A man who walked out on his job the day before sits on a heavy bench in a European city, spills coffee on himself, and laughs, with fear at the edge of it. He left his apartment door open.', source:'"What If" (Caleb, Dublin); retold as Switzerland in your February voice note; scenes 7 and 8 of the March plan.', use:''},['Switzerland bench','the bench']);
+e('sh-freeze','shard','The presentation where the magic did not matter',{what:'The night before a career-making pitch he clicks off. He delivers something merely fine. The client is satisfied anyway. That his real effort was superfluous is what breaks him.', source:'February voice note; scene 5 of the March plan.', use:''},['frozen presentation']);
+e('sh-father','shard','Going to confront the father, and not doing it',{what:'A son travels to have it out with a controlling father. A sharp stranger asks what he hopes to achieve. He has no answer and drives home.', source:'"Shift" (2017), your one finished story; February voice note.', use:''});
+e('sh-dossier','shard','The envelope',{what:'A father hires investigators; the evidence ends the son’s marriage. Surveillance as a form of family attention. Also a planted designer tie as manufactured evidence.', source:'"Shift".', use:''},['the dossier']);
+e('sh-score','shard','Secret scoring',{what:'A woman scores partners against a rulebook they never see; a man awards himself points; a boss uses utilization percentages as a weapon.', source:'"The Score at the End Will Determine the Winner"; "Shift"; "Caricatures".', use:''},['True Love Points']);
+e('sh-bluff','shard','The quit bluff that becomes real',{what:'A star consultant starts his usual threat to quit, stops, looks at the office as if for the first time, and actually quits.', source:'"Caricatures".', use:''});
+e('sh-name','shard','The mispronounced name',{what:'A boss says a Latino name with performed, wrong authenticity.', source:'"Caricatures".', use:''});
+e('sh-seer','shard','The woman who sees through him',{what:'In most of your pieces a sharp, self-possessed woman reads the man accurately within minutes.', source:'"Shift", "Revision is not redemption", "Adjustment".', use:''});
+e('sh-mentee','shard','The mentee he failed',{what:'A woman he was supposed to mentor years ago, and did not, sits across from him.', source:'"Revision is not redemption" (outline).', use:''});
+e('sh-repair','shard','The father’s repairs',{what:'A cheap boom box fixed with mismatched screws, a tape still inside. Making do as a temperament.', source:'"Shift".', use:''});
+e('sh-hidden','shard','Things done for no one',{what:'Hours-long walks with a podcast playing unheard; a third-place plastic trophy kept for the pun; a dream of Antarctica never acted on.', source:'"Adam Moreno" sketch, 2023 course.', use:''});
+e('sh-savor','shard','Savoring',{what:'The happiness research: savoring, connection, giving. In March it was the cure.', source:'February voice note; March plan scenes 12, 19, 30.', use:''},['savoring']);
+
+var SCENES=[
+ {t:'The interrupted session', w:'Mid-sentence at the typewriter, the keys lock solid mid-stroke. The camera iris stays open. The indicator light goes cold.', o:'The locked keys'},
+ {t:'The unscheduled hour', w:'36 hours of not knowing whether this is an error, a punishment or something worse. He rations food and water because he no longer knows the rules and has to invent his own. Counting, listening for adjacent cells.', o:''},
+ {t:'The procedural release', w:'Two prisoner-guards come in to run a rare procedure they do not know well. Thrown off, mildly annoyed.', o:'Orange wristbands'},
+ {t:'The disruption', w:'Laminated card, override code, a misread digit, a flat correction. The typewriter is unbolted with ordinary tools. A tray is set down with his watch.', o:'The laminated card; the watch on a tray'},
+ {t:'The ghost syllables', w:'Hauling the machine out, one guard says something over his shoulder. The thump of the food cart swallows it. Neither he nor the reader catches it.', o:'The food cart'},
+ {t:'The open doorway', w:'The guards leave with the machine. He is unchained, holding the watch, in an amber-lit doorway. Marked EXEMPT.', o:'The amber doorway'}
+].map(function(s,i){ return {id:'seed-sc'+(i+1), title:s.t, what:s.w, want:'', turn:'', because:i?'':'(opening)', therefore:'', reveals:'', withheld:'', object:s.o, status:'likely', seeded:true}; });
+
+/* ================= QUESTIONS ================= */
+// Day 1 ------------------------------------------------------------
+q('s0','premise','Tell me this book the way you would tell a friend across a table. Two minutes, no notes, start anywhere.','A baseline. On Day 4 you will do this again and we compare.',['Which part of that did you rush past?','Which sentence of that would you put on the back cover, and which would you never show anyone?']);
+q('s0','premise','There are two Armandos in your Drive. In March: a consultant who freezes before a pitch, walks out, goes to Europe, faces his father in Panama, and ends up cooking, content. In July: a tech leader shackled to a plinth who is marked EXEMPT by a clerical fluke. Are they the same man? Is the March book the life he had before the plinth, a different book, or dead?','Everything downstream depends on this. If the March material is his before-life, you already own a lot of this novel.',['If they are the same man, which March scenes are now memories, and which never happened?','What did the March book have that you miss in Exempt? What does Exempt have that March could not?'],F('book','relation'));
+q('s0','premise','What are the three things about this book that are not negotiable, whatever else changes?','',['For each: what would you have to believe to give it up?']);
+q('s0','premise','Which parts are you unsure of but keep coming back to anyway?','Returning is information. So is avoidance.',[]);
+q('s0','process','Five of your seven older pieces stop right after the setup or the first confrontation. The March plan has 30 scenes outlined and I found none of them drafted in your Drive. Take one of those and tell me exactly where it stopped: which scene, which day, and what the feeling was.','The stall is the real opponent on this trip. Better to describe it than to out-plan it.',['Was it that you did not know what happened next, or that you knew and it bored you?','What were you doing instead of writing, the week it stopped?','Your endings tend to be exits: he leaves, he quits, he drives home. What is hard about the scene after the exit?']);
+q('s0','process','What did the Save the Cat beat sheet make the book do that felt false?','So we do not rebuild it under another name.',['Scene 12 of that plan was "The Lesson in Savoring". Would the man who wrote the July note let that scene live?']);
+q('s0','premise','Which single image of Exempt arrived first, before there was a plot?','The first image usually knows what the book is about.',['What were you doing when it arrived?','What is in that image that has not made it into the notes yet?']);
+q('s0','process','The July note set four two-hour homework sessions on chapter 1: the watch and the career, the unscheduled hour, the guards, the aftermath. Did you write any of them? What prose for this book exists anywhere, including in your head?','',['If none: what got in the way, concretely?']);
+
+q('s1','premise','Why this book, and why you? What do you know from the inside that an outsider writing this story would get wrong?','Jennie Nash starts every book here. The answer is what you reread when it gets hard.',['Armando’s job is close to yours. What is the most uncomfortable overlap?','What would someone who has never been well paid get wrong about him?']);
+q('s1','premise','The day after finishing it, what should a reader be unable to stop thinking about?','',['Is that a thought about the world or a thought about themselves?']);
+q('s1','premise','Complete the sentence: this book argues that ______ leads to ______.','Lajos Egri’s premise drill. Write it once, then never let a character say it.',['Now reverse it. Is the reversed sentence also a book? Which is truer to how you actually live?','Is "inattention" really the first blank, or is that the polite word?'],F('book','idea'));
+q('s1','premise','Satire in a short novel has one object of ridicule. What is yours? Name the real-world behaviour, the kind you could point at in an airport lounge.','',['Do you do it?','Who does it better than Armando: more gracefully, more guiltlessly?'],F('book','ridicule'));
+q('s1','premise','What does this book refuse to console the reader about?','Harpman answers nothing. Bazterrica convicts her protagonist on the last page. Bleak books choose what they withhold.',[],F('book','refuse'));
+q('s1','premise','Make the strongest honest case that the Offset Market is a good thing. Who is better off because it exists?','If the system has no defenders, it is a cartoon and the satire goes soft.',['Who in the book believes that case? Does Armando, still?']);
+q('s1','premise','The Sinn is "justified consumption": the purchase a man tells himself is taste, not indulgence. What is yours? What is the thing you own that you have a speech ready for?','The book needs the speech in his voice. You already know how it goes.',['Give me the speech, as you would give it to someone sceptical.','Which word in that speech is doing the most lying?']);
+q('s1','premise','Of Harpman, Bazterrica and American Psycho: which is this book closest to in feeling, and where does it part company with it?','',['Which of the three would be most embarrassed by a redemptive ending?']);
+q('s1','premise','In March his flaw was mimetic desire: wanting what he was supposed to want. In July it is inattention. Are those the same thing seen from two sides, or did the book change its mind about what is wrong with him?','',['Which one can a reader watch him do in a scene?'],F('armando','weakness'));
+q('s1','premise','What would make you ashamed of the finished book?','Names the failure you are most likely to commit.',['How would you notice you were doing it, on page 40?']);
+q('s1','premise','Now the premise in one sentence: an event, a person, and a sense of where it goes.','First version. It will change.',['Cut every adjective. Say it again.'],F('book','premise'));
+
+q('s2','plot','Describe the last image of the book. What does the reader see and hear?','Short novels are planned end-first. The ending is latent in the beginning.',['Is he alone?','Is the watch in it?','Is that an exit or a consequence? Your stories usually end on the exit.']);
+q('s2','plot','At the end: what does he have, what has he lost, and does he know?','',['In March he ended more at peace. Does Exempt permit that? Would peace be a win, or the final thing the system sells him?'],F('armando','fate'));
+q('s2','plot','Choose an ending type, for now: a reversal that convicts him; acceptance with nothing answered; a loop back to the opening with its meaning changed; or a cut-off in the middle of a procedure.','You can reverse this on Day 4. Choosing lets the rest be aimed.',['What would the opposite choice give the book that this one cannot?'],F('book','ending'));
+q('s2','plot','What question is still open on the last page, on purpose?','You have one already: what the guard said.',['Is there a second, bigger one?']);
+q('s2','plot','What should the last line make a reader go back and reread in chapter 1?','',[]);
+q('s2','voice','Who tells it, how close, and in what tense? And why not the alternative?','Harpman: a retrospective first-person account by someone who knows no more than we do. Bazterrica: close third, present tense, clinical vocabulary.',['Read me one sentence of chapter 1 in your head, in that voice. Now flip person or tense. Which one makes him harder to pity?'],F('book','pov'));
+q('s2','voice','Where does the telling stand in time? Is someone looking back knowing how it ends, or does the book know only the current minute?','',[]);
+q('s2','pacing','Chapter 1 is 36 hours. How much time does the whole book cover, and what is its clock?','A clock plus an open question is most of what tension is.',['If there is no deadline, what makes page 90 more urgent than page 30?'],F('book','clock'));
+q('s2','pacing','Harpman’s women get out of the cage well into the book. Yours opens at the end of chapter 1. So what is the container for everything after?','This may be the biggest structural question you have. Chapter 1 spends the confinement.',['Does he leave the building? Does the book?','Or does chapter 1 belong later, and something else comes first?'],F('book','shape'));
+q('s2','pacing','If the book were a shape and not an arc, which is it: a line, a tightening spiral, a tour through rooms, a loop, a set of cells?','Jane Alison: pattern, repetition and texture can carry a book that has little plot.',['What repeats? What is different each time it does?']);
+q('s2','voice','He typed a stream of consciousness for paying strangers. Does the reader ever read any of it? Could part of the book be the stream?','The premise hands you a built-in device for memory and for voice. Decide whether to use it.',['If we read it: is he performing for the lens, or is it the one place he is not?','If we never read it: what do we get in its place?']);
+q('s2','pacing','How long is this book? Give a number of words or pages you would be content with.','For reference: the Harpman and the Bazterrica are each around 200 pages.',[],F('book','length'));
+q('s2','process','End of the first stretch. If the outline burned tonight, which three scenes would you still want to write tomorrow morning?','Asked every day. The answers become your drafting order.',[]);
+
+q('s3','character','What does Armando want on an ordinary Tuesday before any of this? Make it concrete enough to photograph.','Lisa Cron: the story is what the plot does to someone who already wants something.',['Why that? What would getting it say about him to the people whose opinion he fears?','Whose opinion is that?'],F('armando','want'));
+q('s3','character','What does he believe about himself or the world that the book will show to be false?','Cron calls it the misbelief; Truby calls it the weakness. Either way it predates page one.',['Say it as he would say it, as a piece of good advice.'],F('armando','weakness'));
+q('s3','character','Tell me the first time he learned that belief. Where is he, how old, who is in the room, what is said?','An origin scene. It may never appear in the book. It will be under every scene that does.',['What did the room smell like?','Is the father there?']);
+q('s3','character','Give me two later moments when acting on that belief paid off handsomely.','A false belief that never worked would not have survived to 50.',[]);
+q('s3','character','What exactly is he complicit in? What did he sign, build, approve, or buy? Did he ever buy Focus Credits himself? Did he ever read someone’s stream?','"Complicit insider" is the July note’s phrase. It needs an act.',['Tell me about the stream he liked best.','Did he know there was a person on the other end? At what level did he know?','Who does his carelessness hurt? One specific person, one specific act.']);
+q('s3','character','How does he justify it when he is alone? Say it in his words.','',['Where did he first hear that justification? From whom?']);
+q('s3','character','Tell me the day he bought the Sinn. Where, how long he deliberated, what he read beforehand, who he told, and what he said.','July’s Day 1 homework, as an interview.',['What did he not say?','What did it replace on his wrist? Where is that one now?'],F('o-sinn','appearances'));
+q('s3','character','How long was he on the plinth before chapter 1 opens? Tell me his first day there.','',['Was he good at it? A man known for the killer concept, asked to produce raw presence on demand.','Did he perform for the lens? When did he stop noticing it?']);
+q('s3','character','What would he never do? And where does the book make him do it, or reveal that he already has?','Donald Maass’s question.',[]);
+q('s3','character','What is his tell under pressure: a habit, a phrase, a thing he touches?','Your older characters clench jaws and cock heads. Find him a new one.',['What does he notice first in any room? What does he never notice?'],F('armando','detail'));
+q('s3','character','Does Exempt’s Armando keep the March biography: fifty, Panamanian-American, immigrant parents, Seattle? What does a ledger do with that history?','',['How does the system render his name? Who gets it wrong, and how?','What was sacrificed for him, and how is that scored?']);
+q('s3','character','Finish this: he is the kind of man who ______ but ______.','A contradiction, not a trait.',[],F('armando','contradiction'));
+q('s3','character','At the end, is the insight offered to him? Does he take it, refuse it, or fail to notice it went by?','Most method books assume the hero changes. Satire often does not. "He does not change" is a legitimate answer.',['If he sees it: what does he do in the next five minutes?'],F('armando','fate'));
+q('s3','character','Why would a reader stay inside this man for two hundred pages?','Not "is he likeable". What is the pleasure of his company?',['Is he funny? Does he know when he is?']);
+q('s3','process','End of Day 1. Which three scenes do you want to write, right now?','',[]);
+
+// Day 2 ------------------------------------------------------------
+q('s4','character','Who are the four to six people this book cannot run without? Names can wait; give me who they are to him.','A short novel carries one developed consciousness and a handful of profiles.',['Who on that list is there out of duty? Could two of them be one person?']);
+q('s4','character','The two guards. Tell them apart for me. What does each want from this shift that has nothing to do with Armando?','Truby: every character is a different answer to the same moral problem.',['They are "higher-tier assets". What did each do, or fail to do, to end up here?','Which of them was once what Armando was?','Do we see either of them again?'],F('guard1','want'));
+q('s4','character','Who is the human face of the system: the person a reader meets and rather likes?','',['What is their version of the Sinn speech?']);
+q('s4','character','Somebody bought his stream. Pick one buyer. Who are they, where do they read it, and what does it do for them?','The clients are unseen in chapter 1. They do not have to stay that way.',['Does he ever meet them? Do they know it was him?','What would they say if told he was Exempt?'],F('clients','want'));
+q('s4','character','The attorney from the March plan. Does she exist in this book? Does she know where he is?','',['Did she try to find out? What did it cost her to ask?','What does she want that has nothing to do with him?'],F('partner','role'));
+q('s4','character','The father. In "Shift" a father surveils his son and calls it care; in March he waits in Panama. Is he in this book? What does a father like that make of a world run on ledgers?','Your one finished story is about him.',['Would he approve of the system?','What did he repair, and what did he throw away?'],F('father','role'));
+q('s4','character','Who wants exactly what Armando wants?','A rival, a double, another subject. In the limbo he listens for the adjacent cells.',['Who is in the next cell? How does he know anything about them?']);
+q('s4','character','Who is harmed by this system in a way Armando is not? Do we ever get their view, even for a paragraph?','',[]);
+q('s4','character','A sharp, self-possessed woman reads the man accurately within minutes in most of your stories. Is she in this one? If so, what does she want that is nothing to do with him?','A recurring figure is a strength until she is only a mirror.',['Has she got something wrong about him?']);
+q('s4','character','Who knew him before, and knows something he would prefer forgotten?','In "Revision is not redemption" it was a woman he was supposed to mentor and did not.',[]);
+q('s4','character','Who took his desk? What happened to the significant new job after he vanished from it?','',['How long before anyone noticed? Who noticed first?']);
+q('s4','character','Which two of your secondary people are in conflict with each other, in a way that has nothing to do with him?','',[]);
+q('s4','character','Go round the cast. For each one: an object, a verbal habit, a detail of the body. Fast, no deliberating.','Profiles, not biographies. Open each sheet in the Bible afterwards if you want to file them.',[]);
+q('s4','character','Whose final appearance matters most, and what happens in it?','',[]);
+
+q('s5','world','Explain the Offset Market to me the way its marketing department would.','Keep this stage to half a day. Only rules that touch a scene deserve an entry.',['What is the tagline?','What does the onboarding email say?'],F('r-market','official'));
+q('s5','world','Now explain it the way someone on a plinth would, to a new arrival, in thirty seconds.','',[]);
+q('s5','world','Follow the money. What is traded, who pays, who profits, and what happens to someone who cannot pay?','',['How does money appear on the page? A statement, a balance, a tone?'],F('r-market','cost'));
+q('s5','world','Walk me through reclassification as a procedure, from the moment the ledger tips. Steps, forms, rooms, waiting. Where was he standing when it happened to him?','Bazterrica’s horror is procedural: regulations and logistics make it believable.',['Who came? What were they wearing? Were they polite?','What did he assume it was, for the first ten minutes?'],F('r-reclass','plain'));
+q('s5','world','EXEMPT. What does it mean in practice? Can he go home? Does he have money? Can anyone sell to him, hire him, score him?','The whole back half of the book stands on this.',['Is there a slang word for people like him?','Is exemption rare, or just rare for these two guards?','Who would envy him?'],F('r-exempt','cost'));
+q('s5','world','Without writing the sentence: what kind of rule would be dumb enough to do this? What is the parser looking for?','The trigger is a clerical fluke. The more plausible the bureaucratic reason, the better the bathos.',['Do you already know the sentence? If you do, say it once and we will file it under the thread.','Who wrote that rule, and what were they trying to prevent?'],F('t-sentence','question'));
+q('s5','world','Give me ten official terms: the words the system uses in place of the plain ones.','In Bazterrica the euphemisms do the exposition. You have four already: Negative Space Weight, Focus Credits, Raw Presence Streams, EXEMPT.',['Which one would Armando have used in a meeting without flinching?']);
+q('s5','world','What can the system not do? Where is it stupid, bored, understaffed?','',['What breaks most often?']);
+q('s5','world','What is completely normal to him that will shock the reader?','',[]);
+q('s5','world','Outside. Is it our world with a ledger running underneath, or something further along? What does a street look like?','',['Is it still Seattle?','What would a visitor from this year notice within an hour?']);
+q('s5','world','Open the World rules tab in your head. For each rule, choose: the reader sees it, infers it, hears it named but never explained, or never gets it.','Your disclosure ledger. Both Harpman and Bazterrica leave the cause of everything permanently unexplained.',['What is the one thing you will never explain, even to yourself?']);
+q('s5','world','What will the reader wrongly assume in the first third, and when are they corrected?','',[]);
+q('s5','world','The plinth room and the hall. Temperature, light, surfaces, what the air does. What does he hear when nothing is happening?','',['What is the amber light for?','What does the food taste like? Who decided that?'],F('p-cell','senses'));
+q('s5','world','The watch came back with the month ambiguous. How long could it have been? What is the longest you could make it without breaking the book?','',[],F('t-month','status'));
+q('s5','process','End of Day 2. Three scenes you want to write, right now.','',[]);
+
+// Day 3 ------------------------------------------------------------
+q('s6','plot','Tell me chapter 1 as it stands today, start to finish, as if I had not read the note. What question does it plant?','Then open the Scenes board: the six beats are already there as cards.',['Which of the six beats are you least sure of?']);
+q('s6','plot','He is standing in the amber doorway holding the watch. What happens in the next hour?','This is the page after the last page you have planned.',['Does he step through? What is on the other side?','Who is the first person to speak to him?','What does he do with the watch: wrist, pocket, hand?']);
+q('s6','plot','Inside the logic of this world, what is the worst thing that can happen to him now? Does it happen? Where?','Not death. The worst thing for him.',['Is being left alone the worst thing?']);
+q('s6','plot','Where is the moment he could still walk away from something, and what does he choose?','A passive protagonist is the risk of this premise. He needs at least one real choice.',['Give me three decisions he makes in the book that have consequences.']);
+q('s6','plot','The scene where he reconstructs what he typed. Where is he? What is in his hands? What sets it off?','Your rule: it must feel smaller than what it caused.',['Does he laugh?','Does anyone else ever know?','How far from the end of the book is this?'],F('t-sentence','paid'));
+q('s6','plot','Where does the book change container: the point after which it is a different kind of book?','',[]);
+q('s6','plot','Where does the satire stop being funny?','',['Is there a scene that is funny and frightening in the same line?']);
+q('s6','plot','Which scene will be hardest to write? Which one do you most want to write?','',['Are they the same scene?']);
+q('s6','plot','What is the quietest scene that matters most?','',[]);
+q('s6','plot','Now put those on the Scenes board: opening, the next hour, the worst thing, the choice, the reconstruction, the last image. One card each, a few lines. Then tell me which gap between two cards is widest.','Five to seven tentpoles. Leave the rest unknown on purpose.',['Talk about that gap. What must be true at its start and at its end?']);
+
+q('s7','plot','Walk me from the doorway to the next tentpole using only "because" and "but". No "and then".','The test usually credited to the South Park writers. George Saunders says the same thing: causality is what passes energy from one beat to the next.',['Where did you want to say "and then"? What is missing there?']);
+q('s7','plot','How does his life before enter the book? Memory during the limbo, the stream, objects returned to him, people who turn up? Roughly what proportion is before and what is now?','',['Which before-scene earns a full dramatised scene, and which get a sentence?']);
+q('s7','plot','What situation recurs with a difference? In Harpman it is more cages. What is yours?','Repetition with variation can stand in for plot in a book this sparse.',['What is new the third time?']);
+q('s7','pacing','Pick the scene on your board where the least happens. What is carrying it?','',['What did he expect to happen in it, and what happens instead?']);
+q('s7','plot','Take any one card. What did he expect when he walked in? What happened instead? What is different by the end, for him and for the reader?','Repeat this one as often as you like, a different card each time. File the answers on the card.',['Why does this scene matter to him, given what he believes?']);
+q('s7','plot','Where do the bench, the frozen presentation, and the drive to the father belong in this book, if anywhere? Look at the Raw material tab.','You have been writing toward this man since 2017.',['Which one are you keeping out of sentiment?']);
+q('s7','pacing','Read the board top to bottom. Is each scene worse, or stranger, in a new way? Where does a scene repeat a change that has already happened?','Saunders: a story is continual escalation; never re-enact a beat.',[]);
+
+q('s8','motif','Which three objects recur? For each: what does it mean the first time, in the middle, and at the end?','In a short novel objects carry the argument. Each should return at least three times, changed.',[]);
+q('s8','motif','The watch after chapter 1. Who notices it? Who wants it? Where is it on the last page?','',['Does it ever stop?','Does he ever take it off?'],F('o-sinn','final'));
+q('s8','motif','The typewriter is carried out of the room. Where does it go? Does the reader ever see one again?','',[],F('o-typewriter','final'));
+q('s8','motif','The thump of the food cart swallowed the only thing anyone said to him. Does that sound come back?','',['What other sound belongs to this book?'],F('o-cart','final'));
+q('s8','motif','Amber doorway, orange wristbands, a cold indicator light. Is there a colour system? What does each colour mean to someone who works there?','',[],F('o-light','final'));
+q('s8','motif','Your stories are full of status objects that turn into evidence: ties, cufflinks, a planted Hermès. What else in Armando’s life is on the ledger besides the watch?','',['Which one is he proudest of having resisted buying?']);
+q('s8','motif','Scoring runs through everything you have written: secret points for lovers, points awarded to oneself, utilization rates. What is the smallest, most domestic act of scoring in this book?','',[]);
+q('s8','process','End of Day 3. Three scenes you want to write, right now. Have they changed since Day 1?','',[]);
+
+// Day 4 ------------------------------------------------------------
+q('s9','plot','Read the whole scene board aloud, joining each card to the next with "because" or "but". Tell me every place you had to say "and then".','Stress test. The board marks missing causes in red.',['If the book is a spiral or a tour, some links are pattern and not cause. Which ones, honestly?']);
+q('s9','plot','Which three scenes could be cut without the book noticing?','',['What is each one protecting you from having to write?']);
+q('s9','world','Where on the board have you explained something the reader could have inferred?','Your own rule, and a complaint some critics make about Bazterrica.',[]);
+q('s9','premise','Where does a character say the theme out loud? Where does the narration tell us what to think of him?','',[]);
+q('s9','character','Where does the book feel sorry for him?','',[]);
+q('s9','plot','Count the scenes in which he does something, as against scenes in which something is done to him.','',['Which done-to scene could become a choice?']);
+q('s9','plot','Your stories end on the exit. Is the last card on the board an exit? What is the consequence scene after it, and is that the real ending?','',[]);
+q('s9','premise','Tell me the book again, as to a friend. Two minutes, no notes.','Compare with the first answer you gave on Day 1. It is in the Notebook.',['What changed? What surprised you most in four days?','Now in one sentence. Now in one word.'],F('book','premise'));
+
+q('s10','process','Open the Threads tab. Sort every open question into three piles: decide now, let the draft discover it, never answered.','Not everything should be settled before page one. Matt Bell: write the scenes you can already see, out of order, and expect to rewrite.',['Decide the "decide now" pile. Out loud. Go.']);
+q('s10','process','Which ten scenes will you draft first? Order them by how much you want to write them, not by where they fall.','',[]);
+q('s10','process','When and where do you write, starting the first morning home? What is the daily minimum you would be embarrassed to miss?','Something like 500 words or one scene card. Small enough to do on a bad day.',['What gets displaced to make the room?']);
+q('s10','process','It will stall. Describe the day it stalls, and say now what you will do that day.','A stall protocol decided in advance: skip to the next scene you want, log the block as an open thread.',['Who will you tell?']);
+q('s10','process','What will you not do? More outlining, another pass on chapter 1, a new tool?','Four days of talking can discharge the urge to write. Start within 48 hours of getting off the train.',[]);
+q('s10','process','Who reads it first, and at what point?','You have had sentence-level praise and no structural feedback, because you have never handed anyone a long piece.',[]);
+q('s10','process','Set the checkpoint: at 15,000 words you rerun the Day 4 stress test on what exists. What date is that?','',[]);
+
+/* ================= SPARKS ================= */
+var SP=[
+['structure','What if the March novel is literally what he typed on the plinth: the pitch, the father, the bench, sold by the line as Raw Presence?'],
+['structure','What if the plinth is twenty pages of a two-hundred page book and he never sees it again?'],
+['structure','What if the book never leaves the building?'],
+['structure','What if the 36 hours is the whole book?'],
+['structure','What if chapter 1 is not chapter 1?'],
+['structure','What if five pages belong to a client, reading his stream on a commute?'],
+['structure','What if the trigger sentence is printed in plain sight in chapter 1 and is so ordinary that no reader marks it?'],
+['structure','What if the last scene is someone else’s keys locking mid-stroke?'],
+['structure','Harpman looks back; Bazterrica stays in the present tense. What if you wrote the first page both ways before choosing?'],
+['world','What if exemption is worse than the plinth: nobody may buy from him, sell to him, or score him?'],
+['world','What if he tries to get back in?'],
+['world','What if there is a form to appeal an exemption, and he fills it in?'],
+['world','What if exempt people are a known category with a slang name, and he has used the word himself?'],
+['world','What if being exempt makes him valuable to someone, as a loophole?'],
+['world','What if nobody outside noticed he was gone?'],
+['world','What if his significant new job was selling into the Offset Market?'],
+['world','What if someone does explain the system to him, confidently, and is wrong?'],
+['world','What if nobody above the guards ever appears?'],
+['world','What if "month ambiguous" turns out to mean years?'],
+['world','What if savoring, the cure in your March plan, is the product in this one: the thing the wealthy buy by the minute?'],
+['world','What if the happiness research is the training manual handed to new subjects?'],
+['character','What if one of the guards used to be exactly what Armando was?'],
+['character','What if the client who bought his stream is someone from his old life who never knew it was him?'],
+['character','What if he bought Focus Credits himself, and can still remember the stream he liked best?'],
+['character','What if he was good at the plinth, a top performer, and exemption is the first thing he has ever failed at?'],
+['character','What if the frozen pitch happened to him inside: he stopped trying, and the numbers did not change?'],
+['character','What if the mentee he failed is the one who processes his file?'],
+['character','What if the father’s envelope from "Shift" is the system’s file on him: attention as monitoring, and he half recognises the handwriting?'],
+['character','In "The Score at the End" a woman keeps a secret rulebook for lovers. In a world with a public ledger, who keeps a private one on Armando?'],
+['character','Manny’s quit bluff became real because he finally meant it. What ritual of Armando’s was a bluff the system took literally?'],
+['character','What if the woman who sees through him is on the next plinth, and he only ever hears her?'],
+['character','What if someone has to sign for him to be released?'],
+['character','What if the guards’ irritation is the last human attention he gets for a long time, and he comes to miss it?'],
+['character','How does the system write "Armando"? What if the only person who says it correctly is the last one he wants to hear it from?'],
+['character','What does he do that produces nothing: the long walks with a podcast unheard, the dream of Antarctica? What if that is what the parser was built to find?'],
+['object','What if the trigger sentence was about the watch?'],
+['object','What if he gives the watch away and the reader is not told why?'],
+['object','What if someone tells him the watch is wrong and he cannot check?'],
+['object','The father fixed a boom box with mismatched screws. What if the opposite of the Sinn is somewhere in this book, and it works?'],
+['object','In "Shift" a designer tie was planted as evidence. What if the watch purchase was nudged? (This fights your rule that he did it to himself. Argue for the rule.)'],
+['object','What if the bench and the spilled coffee, the one time he laughed, is the memory he could never get onto the page for them?'],
+['ending','What if he ends at a keyboard again, by choice?'],
+['ending','What if the March ending happens exactly, the kitchen, the meal, the contentment, and the reader cannot tell whether it is freedom?'],
+['ending','What if he never finds out what happened to the people whose streams he read?'],
+['ending','What if the reader never gets the sentence either? (This breaks your July rule. Say why the rule is right.)'],
+['ending','You have called humour protective distancing. What if the book gets funnier as it gets bleaker, and stops being funny one page before the end?']
+].map(function(s,i){ return {id:'sp'+(i+1), track:s[0], t:s[1]}; });
+
+window.__PACK__={
+ id:'exempt-1', project:'exempt', title:'Exempt',
+ days:[
+  {n:1,title:'Ground',blurb:'What book this is, how it ends, and who he is.',exit:'a premise sentence, an ending type, a view on the two Armandos, and his sheet mostly filled.'},
+  {n:2,title:'People and world',blurb:'A small cast where each person answers the same problem differently. Rules, and when the reader learns each.',exit:'four to six cast sheets, and every world rule with a disclosure choice.'},
+  {n:3,title:'Spine',blurb:'Five to seven fixed scenes, the causes between them, and what the objects do.',exit:'tentpoles on the board joined by "because", and the watch’s last appearance.'},
+  {n:4,title:'Pressure and plan',blurb:'Break the outline before the draft does. Then decide how the first two weeks go.',exit:'a tested board, threads sorted into three piles, and a drafting plan with a date in it.'}],
+ stages:[
+  {id:'s0',day:1,title:'Inventory',purpose:'What exists, what is fixed, where it has stalled before.'},
+  {id:'s1',day:1,title:'Why and point',purpose:'Your stake, the argument, the thing being ridiculed.'},
+  {id:'s2',day:1,title:'Ending and frame',purpose:'End first. Then voice, clock and shape.'},
+  {id:'s3',day:1,title:'Armando',purpose:'Want, belief, complicity, and what he does at the end.'},
+  {id:'s4',day:2,title:'Cast',purpose:'Four to six people, as profiles.'},
+  {id:'s5',day:2,title:'World and disclosure',purpose:'Rules that touch scenes. Cap this at half a day.'},
+  {id:'s6',day:3,title:'Tentpoles',purpose:'The scenes the book cannot be without.'},
+  {id:'s7',day:3,title:'Scene chain',purpose:'Because and but, not and then.'},
+  {id:'s8',day:3,title:'Objects and motif',purpose:'What recurs, and how it changes.'},
+  {id:'s9',day:4,title:'Stress test',purpose:'Cause, escalation, withholding, pity.'},
+  {id:'s10',day:4,title:'Open questions and drafting plan',purpose:'What to decide, what to discover, and when you start.'}],
+ questions:Q, sparks:SP,
+ types:{
+  book:{one:'The book',many:'The book',hint:'One page that says what this is.'},
+  character:{one:'Character',many:'Cast',hint:'Profiles, not biographies.'},
+  rule:{one:'World rule',many:'World rules',hint:'Only rules that touch a scene.'},
+  place:{one:'Place',many:'Places',hint:''},
+  object:{one:'Object',many:'Objects',hint:'Things that recur and change meaning.'},
+  thread:{one:'Thread',many:'Threads',hint:'Questions the book raises. Some are never answered on purpose.'},
+  decision:{one:'Decision',many:'Decisions',hint:'Your rules for this book. The interview checks answers against them.'},
+  shard:{one:'Raw material',many:'Raw material',hint:'From your older stories and notes.'}},
+ fields:{
+  book:[{k:'premise',label:'Premise, one sentence',core:1},{k:'idea',label:'It argues that… leads to…',core:1},{k:'ridicule',label:'The one thing ridiculed',core:1},{k:'refuse',label:'What it refuses to console'},{k:'ending',label:'Ending type and last image',core:1},{k:'shape',label:'Shape and container',core:1},{k:'pov',label:'Who tells it, tense, distance',core:1},{k:'clock',label:'Time span and clock'},{k:'length',label:'Length'},{k:'relation',label:'Relation to the March Armando'}],
+  character:[{k:'role',label:'Who they are to the book',rows:3},{k:'want',label:'Wants',ask:'What does {name} want, concretely, that has nothing to do with the theme?',core:1},{k:'weakness',label:'Weakness or false belief',ask:'What is {name} wrong about?'},{k:'answer',label:'Their answer to the book’s problem',ask:'How does {name} live with the ledger differently from Armando?'},{k:'contradiction',label:'Contradiction',ask:'{name} is the kind of person who… but…',core:1},{k:'detail',label:'Object, verbal habit, body',ask:'Give {name} one object, one habit of speech, one detail of the body.',core:1},{k:'knows',label:'Knows / does not know'},{k:'fate',label:'Last appearance'}],
+  rule:[{k:'plain',label:'In plain words',rows:3,core:1},{k:'official',label:'The official term'},{k:'cost',label:'Cost or consequence',ask:'What does {name} cost, and who pays?'},{k:'disclosure',label:'Reader learns it how: shown, inferred, named only, never. And where.',ask:'How, if ever, does the reader learn about {name}?',core:1}],
+  place:[{k:'senses',label:'Three sensory facts',rows:3,core:1},{k:'func',label:'What happens here'},{k:'scenes',label:'Scenes set here'}],
+  object:[{k:'literal',label:'What it literally is',rows:3},{k:'appearances',label:'Appearances, and what it means each time',rows:3,ask:'Where does {name} appear next, and what has changed about what it means?',core:1},{k:'final',label:'Where it ends up',core:1},{k:'guard',label:'Your rule about it'}],
+  thread:[{k:'question',label:'The question'},{k:'planted',label:'Planted where'},{k:'paid',label:'Paid where'},{k:'status',label:'Status: decide now / discover in draft / never answered / resolved',core:1}],
+  decision:[{k:'decision',label:'The decision',rows:3},{k:'why',label:'Why, and where it comes from'},{k:'replaced',label:'What it replaced'}],
+  shard:[{k:'what',label:'What it is',rows:3},{k:'source',label:'Where it comes from'},{k:'use',label:'Use in this book',ask:'Does {name} belong in Exempt? Where?'}]},
+ seed:{entities:E, scenes:SCENES},
+ knownWords:['Sinn','Seattle','Panama','Panamanian','American','Rolex','Exempt','Offset','Market','Mindfulness','Focus','Credits','Raw','Presence','Streams','Negative','Space','Weight','Weights','Cognitive','Detachment','Harpman','Bazterrica','Europe','Switzerland','Dublin','March','July','Tuesday','Monday','Wednesday','Thursday','Friday','Saturday','Sunday','Claude','Save','Cat','Shift','Canada','Toronto','Vancouver'],
+ tripwires:[
+  {re:'(watch|sinn)[^.?!]{0,90}\\b(times?|timing|timed|counts?|counting|interval|how long|hours? (have )?pass)', msg:'the watch is never used to time or track intervals. It is an identity anchor only.'},
+  {re:'\\bsin\\b[^.?!]{0,80}\\b(pun|echo|again|second|repeat|callback|twice)|\\b(pun|echo)\\b[^.?!]{0,80}\\bsinn?\\b', msg:'the Sinn / sin echo appears once, early, unremarked. The narration never underlines it.'},
+  {re:'\\b(victim|unfair|injustice|did ?n.t deserve|innocent|wronged)\\b', msg:'he is not a victim. He did this through inattention. Watch for retroactive self-pity.'},
+  {re:'guards?[^.?!]{0,90}\\b(guilt\\w*|sorry|apolog\\w+|sympath\\w+|shaken|kindness|pity|ashamed|remorse)', msg:'the guards are confused and mildly irritated, never guilty or shaken. Procedural friction, not moral weight.'},
+  {re:'(sentence|line|what he (wrote|typed))[^.?!]{0,110}\\b(beautiful|profound|wise|poetic|moving|transcend\\w+|truth|true)\\b', msg:'the trigger sentence is bathos. Mundane, faintly embarrassing, smaller than what it caused. Do not let it become beautiful or true in hindsight.'},
+  {re:'(what the guard said|guard.s (words|comment|expression)|ghost syllables)[^.?!]{0,110}\\b(reveal\\w*|turns? out|finally|learns?|finds? out|was actually|remembers)', msg:'what the guard said is never recovered. Closure on theme, not on scene.'},
+  {re:'\\b(epiphany|enlighten\\w+|transcend\\w+|awakening|spiritual clarity|sees the light)\\b', msg:'his exemption is a clerical accident, not an epiphany. Nothing about it is earned.'},
+  {re:'\\b(starv\\w+|emaciat\\w+|dying of thirst|collaps\\w+|deliri\\w+|hallucinat\\w+)\\b', msg:'the 36 hours are psychological disorientation and rule-guessing, not physical collapse. Hunger and thirst stay in the background.'},
+  {re:'\\b(narrator explains|explain(s|ed)? to the reader|info ?dump|exposition scene|someone explains the (market|system))\\b', msg:'the economics are never explained directly. The reader infers them.'},
+  {re:'\\b(catalyst|fun and games|all is lost|dark night of the soul|break into (two|three)|b[- ]story|midpoint)\\b', msg:'that is beat-sheet vocabulary from the plan that stalled. Use it if it helps, but say what happens in this book’s own terms too.'}],
+ genericProbes:[
+  'Give me one specific moment where that is true. Where are we?',
+  'If I filmed that, what would I see?',
+  'What does it cost him? What does he give up?',
+  'What if the reverse were true?',
+  'So what happens because of that?',
+  'What did he think would happen?',
+  'What is worse than that, and still plausible in this world?',
+  'Have we seen this beat already? What is new this time?',
+  'Who else is in the room, and what do they want?',
+  'What happened in the hour before? What does he do straight after?',
+  'What does the reader know here that he does not, or the reverse?',
+  'If this were cut, what would break?',
+  'Say it in one sentence. Now in one word.',
+  'What surprised you in what you just said?',
+  'Why does that matter to him? And why does that matter?',
+  'You do not know yet. Is this for the draft to discover, or do you decide today?',
+  'Which part of that answer do you not believe?',
+  'What is the version of that you are slightly embarrassed by?'],
+ briefPrompt:[
+  'You are acting as my developmental editor for a short literary novel, working title "Exempt". I am the author. Below is my story bible and a transcript of everything I have dictated in a structured interview since my last check-in (dictation errors are likely; read through them).',
+  '',
+  'Rules:',
+  '- Do not write prose, scenes, dialogue or plot for me. Do not propose what happens. I want questions and observations only.',
+  '- Treat the Decisions section as my canon. Flag where my new answers break it.',
+  '',
+  'Please reply with, in this order:',
+  '1. What you heard: the book as it now stands, in under 150 words, using my words where you can.',
+  '2. Contradictions between answers, or between answers and Decisions. Quote the two sides briefly.',
+  '3. The five thinnest spots: where I was abstract, hedged, or dodged the question.',
+  '4. Anything I said in passing that sounds more alive than what I said on purpose.',
+  '5. Suggested updates to Bible fields, as a short list of "Entry / field: text", in my words only.',
+  '6. A new question pack as one JSON code block, exactly in this shape, with 15 to 25 questions aimed at the thin spots and at whatever stage I am in:',
+  '```json',
+  '{"id":"round-2","title":"Round 2","note":"one line on what this round is for","questions":[{"q":"the question","why":"one line on why you are asking","track":"premise|character|world|plot|pacing|motif|voice|process","probes":["a follow-up","another"]}],"sparks":[{"t":"a what-if built only from things I said","track":"structure|character|world|object|ending"}]}',
+  '```',
+  'Questions should ask for specific moments, not explanations. Ration "why". One question at a time, no multi-part questions.'].join('\n')
+};
+})();
+</script>
+<script>
+window.__SW__='not installed for offline';
+if ('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')) {
+  navigator.serviceWorker.register('sw.js').then(function(){ return navigator.serviceWorker.ready; }).then(function(){ window.__SW__='offline copy ready (build 1122-1907)'; }).catch(function(){ window.__SW__='offline copy failed'; });
+}
+</script>
+<script>(function(){
+'use strict';
+var PACK = window.__PACK__;
+var KEY = 'storydesk:'+PACK.project;
+var VIEWS = [['interview','Interview','?'],['bible','Bible','B'],['scenes','Scenes','S'],['sparks','Sparks','*'],['map','Progress','%'],['sync','Backup','⇅']];
+
+/* ---------- tiny DOM helper ---------- */
+function h(tag, attrs){
+  var el = document.createElement(tag), i, k;
+  if (attrs) for (k in attrs){
+    var v = attrs[k];
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'text') el.textContent = v;
+    else if (k.slice(0,2) === 'on') el.addEventListener(k.slice(2), v);
+    else if (k === 'value') el.value = v;
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (i = 2; i < arguments.length; i++) add(el, arguments[i]);
+  return el;
+}
+function add(el, kid){
+  if (kid == null || kid === false) return;
+  if (Array.isArray(kid)) { kid.forEach(function(k){ add(el,k); }); return; }
+  el.appendChild(kid.nodeType ? kid : document.createTextNode(String(kid)));
+}
+function uid(p){ return (p||'x')+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function words(t){ t=(t||'').trim(); return t ? t.split(/\s+/).length : 0; }
+function fmt(ts){ var d=new Date(ts); return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}); }
+function esc(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+var toastT;
+function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'; clearTimeout(toastT); toastT=setTimeout(function(){t.className='toast';},2600); }
+
+/* ---------- state + storage (IndexedDB primary, localStorage mirror) ---------- */
+var S = null, db = null, saveT = null, memOnly = false;
+function fresh(){
+  var seed = JSON.parse(JSON.stringify(PACK.seed));
+  return { v:1, project:PACK.project, created:Date.now(), saved:0,
+    answers:[], qstatus:{}, drafts:{}, entities:seed.entities, scenes:seed.scenes,
+    sparkState:{}, packs:[], settings:{theme:'light', fs:18, tts:false, listen:false, audio:false},
+    ui:{view:'interview', stage:null, qid:null, btab:'character'}, lastBackup:0, lastBrief:0 };
+}
+function openDB(){
+  return new Promise(function(res){
+    try {
+      var r = indexedDB.open('storydesk', 1);
+      r.onupgradeneeded = function(){ var d=r.result; d.createObjectStore('kv'); d.createObjectStore('audio'); };
+      r.onsuccess = function(){ db=r.result; res(db); };
+      r.onerror = function(){ res(null); };
+    } catch(e){ res(null); }
+  });
+}
+function idb(store, mode, fn){
+  return new Promise(function(res){
+    if (!db) return res(null);
+    try { var tx=db.transaction(store,mode), rq=fn(tx.objectStore(store)); tx.oncomplete=function(){res(rq?rq.result:null);}; tx.onerror=tx.onabort=function(){res(null);}; }
+    catch(e){ res(null); }
+  });
+}
+function load(){
+  var ls=null; try { ls=JSON.parse(localStorage.getItem(KEY)||'null'); } catch(e){}
+  return openDB().then(function(){ return idb('kv','readonly',function(s){return s.get(KEY);}); }).then(function(dbv){
+    var pick = dbv && ls ? (dbv.saved>=ls.saved?dbv:ls) : (dbv||ls);
+    S = pick || fresh();
+    migrate();
+    if (navigator.storage && navigator.storage.persist) { try { navigator.storage.persist(); } catch(e){} }
+  });
+}
+function migrate(){
+  var f=fresh(), k;
+  for (k in f) if (!(k in S)) S[k]=f[k];
+  for (k in f.settings) if (!(k in S.settings)) S.settings[k]=f.settings[k];
+  for (k in f.ui) if (!(k in S.ui)) S.ui[k]=f.ui[k];
+}
+function save(now){
+  clearTimeout(saveT);
+  saveT = setTimeout(function(){
+    S.saved = Date.now();
+    var ok=false;
+    try { localStorage.setItem(KEY, JSON.stringify(S)); ok=true; } catch(e){}
+    idb('kv','readwrite',function(s){ return s.put(S, KEY); }).then(function(){ /* fine */ });
+    if (!ok && !db && !memOnly){ memOnly=true; toast('Storage is unavailable here. Copy a backup before closing.'); }
+    snapshot();
+  }, now?0:500);
+}
+var lastSnap = 0;
+function snapshot(){ // rolling safety copies, one every 10 minutes, keep 12
+  if (!db || Date.now()-lastSnap < 600000) return;
+  lastSnap = Date.now();
+  var slot = 'snap:'+(Math.floor(lastSnap/600000)%12);
+  idb('kv','readwrite',function(s){ return s.put(JSON.parse(JSON.stringify(S)), slot); });
+}
+
+/* ---------- pack access ---------- */
+function allQuestions(){ var q=PACK.questions.slice(); S.packs.forEach(function(p){ q=q.concat(p.questions||[]); }); return q; }
+function allStages(){ var st=PACK.stages.slice(); S.packs.forEach(function(p){ (p.stages||[]).forEach(function(x){ st.push(x); }); }); return st; }
+function allSparks(){ var s=PACK.sparks.slice(); S.packs.forEach(function(p){ s=s.concat(p.sparks||[]); }); return s; }
+function qById(id){ return allQuestions().filter(function(q){return q.id===id;})[0]; }
+function stageQs(sid){ return allQuestions().filter(function(q){return q.stage===sid;}); }
+function ent(id){ return S.entities.filter(function(e){return e.id===id;})[0]; }
+function ansFor(qid){ return S.answers.filter(function(a){return a.qid===qid && !a.parent;}); }
+function nextQ(fromStage){
+  var st = allStages(), i, j, qs, start = 0;
+  if (fromStage) for (i=0;i<st.length;i++) if (st[i].id===fromStage) start=i;
+  for (var pass=0; pass<2; pass++){
+    for (i=start;i<st.length;i++){ qs=stageQs(st[i].id);
+      for (j=0;j<qs.length;j++){ var s=S.qstatus[qs[j].id]; if (!s || (pass===1 && s==='later')) return qs[j]; } }
+    for (i=0;i<start;i++){ qs=stageQs(st[i].id);
+      for (j=0;j<qs.length;j++){ var s2=S.qstatus[qs[j].id]; if (!s2 || (pass===1 && s2==='later')) return qs[j]; } }
+  }
+  return null;
+}
+
+/* ---------- the offline "editor": heuristics that read an answer ---------- */
+var HEDGE = /\b(maybe|perhaps|kind of|sort of|i guess|i think|not sure|possibly|probably|i don'?t know|might be|could be|something like)\b/gi;
+var ABSTRACT = /\b(realiz\w+|understand\w*|learns?|feels? (?:like|that)|meaning(?:ful)?|happiness|content(?:ment|ed)?|growth|journey|theme|represents?|symboli[sz]\w+|comes to terms|transform\w*|epiphany|closure|redemption|identity|presence|authentic\w*|satisf\w+|connection)\b/gi;
+var SENSE = /\b(smell\w*|sound\w*|hear\w*|taste\w*|touch\w*|cold|warm|hot|wet|dry|rough|smooth|light|dark|amber|orange|grey|gray|metal\w*|concrete|click\w*|thump\w*|hum\w*|tick\w*|sweat\w*|dust\w*|skin|hands?|fingers?|mouth|teeth|breath\w*|stale|sour|bitter|loud|quiet|silence)\b/i;
+var CAUSE = /\b(because|so that|therefore|which means|as a result|so he|so she|so they|but then|which forces|that's why)\b/i;
+function analyze(q, text, used){
+  var out = [], w = words(text), m, i;
+  function push(kind, t){ if (used.indexOf(t)<0 && out.every(function(o){return o.t!==t;})) out.push({kind:kind,t:t}); }
+  // 1. the writer's own rules, tripped
+  PACK.tripwires.forEach(function(tw){ try { if (new RegExp(tw.re, 'i').test(text)) push('trip', tw.msg); } catch(e){} });
+  // 2. authored follow-ups for this question
+  var authored=(q.probes||[]).filter(function(p){ return used.indexOf(p)<0; });
+  if (authored.length) push('probe', authored[0]);
+  // 3. reading the answer itself
+  if (w < 35) push('auto', 'That was short. Give me the long version: put us in one specific moment of it. Where are we, who is in the room, what is in his hands?');
+  m = text.match(HEDGE);
+  if (m && m.length >= 2) push('auto', 'You hedged '+m.length+' times ("'+uniq(m).slice(0,3).join('", "')+'"). Commit for the next 24 hours: which is it? Then say what committing costs you.');
+  if (/\b(either|or maybe|or perhaps|or else|or possibly|, or )\b/i.test(text)) push('auto', 'You gave yourself alternatives. Pick the one that makes the book harder to write. Why is that one truer?');
+  m = text.match(ABSTRACT);
+  if (m) push('auto', '"'+m[0]+'" is a summary word. What is the physical event the reader watches instead? What does a camera see?');
+  if (w >= 35 && !SENSE.test(text)) push('auto', 'No senses in that answer. Give it one sound, one texture and one smell that belong only to this.');
+  if ((q.track==='plot' || q.track==='pacing') && w >= 35 && !CAUSE.test(text)) push('auto', 'I heard "and then". Rebuild it as cause: this happens BECAUSE of what, and THEREFORE what has to happen next?');
+  if (q.track==='world' && w >= 50) push('auto', 'You just explained it to me, which is fine in here. In the book, what is the least the reader must see to infer it? Name the object, gesture or line.');
+  // 4. people and things you mentioned whose sheets are thin
+  mentions(text).forEach(function(e){
+    var gaps = (PACK.fields[e.type]||[]).filter(function(f){ return f.ask && !(e.fields[f.k]||'').trim(); });
+    if (gaps.length) push('ent', 'You mentioned '+e.name+'. '+gaps[0].ask.replace(/\{name\}/g, e.name));
+  });
+  // 5. names I do not know yet
+  newNames(text).slice(0,2).forEach(function(n){ push('name', 'New name: "'+n+'". Who or what is that, in one line? (Then add it to the Bible so I can track it.)'); });
+  authored.slice(1).forEach(function(p){ push('probe', p); });
+  // 6. one rotating generic probe, so there is always somewhere to go
+  var g = PACK.genericProbes, start = (S.answers.length*7) % g.length;
+  for (i=0;i<g.length;i++){ var t=g[(start+i)%g.length]; if (used.indexOf(t)<0){ push('gen', t); break; } }
+  return out;
+}
+function uniq(a){ var o=[]; a.forEach(function(x){ x=x.toLowerCase(); if (o.indexOf(x)<0) o.push(x); }); return o; }
+function mentions(text){
+  return S.entities.filter(function(e){
+    return [e.name].concat(e.aliases||[]).some(function(n){ return n && new RegExp('\\b'+esc(n)+'\\b','i').test(text); });
+  });
+}
+var STOP = 'I The A An And But Or So He She They It We You His Her Their That This There Then When What Why How Who Because If In On At Of For To With Not No Yes Maybe Okay OK Well Like Also Just One Two Day Chapter Act Scene God'.split(' ');
+function newNames(text){
+  var known = {}, out = [], m, re = /(?:[a-z,;]\s+)([A-Z][a-z]{2,}(?:\s[A-Z][a-z]{2,})?)/g;
+  S.entities.forEach(function(e){ [e.name].concat(e.aliases||[]).forEach(function(n){ (n||'').split(/\s+/).forEach(function(p){ known[p.toLowerCase()]=1; }); }); });
+  (PACK.knownWords||[]).forEach(function(k){ known[k.toLowerCase()]=1; });
+  while ((m = re.exec(text))){ var n=m[1], first=n.split(' ')[0];
+    if (STOP.indexOf(first)>=0 || known[first.toLowerCase()] || out.indexOf(n)>=0) continue; out.push(n); }
+  return out;
+}
+
+/* ---------- voice: dictation is the main path; these are extras ---------- */
+var SR = window.SpeechRecognition || window.webkitSpeechRecognition, rec = null;
+function listenInto(ta, btn){
+  if (rec){ rec.stop(); return; }
+  try {
+    rec = new SR(); rec.continuous = true; rec.interimResults = false; rec.lang = 'en-US';
+    try { rec.processLocally = true; } catch(e){}
+    rec.onresult = function(ev){ for (var i=ev.resultIndex;i<ev.results.length;i++) if (ev.results[i].isFinal){ ta.value += (ta.value && !/\s$/.test(ta.value)?' ':'') + ev.results[i][0].transcript.trim(); ta.dispatchEvent(new Event('input')); } };
+    rec.onerror = function(ev){ toast('Listening stopped: '+ev.error+'. Use the keyboard mic instead.'); };
+    rec.onend = function(){ rec=null; btn.textContent='Listen'; btn.classList.remove('rec'); };
+    rec.start(); btn.textContent='Stop listening'; btn.classList.add('rec');
+  } catch(e){ rec=null; toast('In-app listening is not available. Use the keyboard mic.'); }
+}
+function speak(text){ try { speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(text); u.rate=0.95; speechSynthesis.speak(u); } catch(e){} }
+var mr = null, chunks = [];
+function recordToggle(answerKey, btn, onDone){
+  if (mr){ mr.stop(); return; }
+  if (!navigator.mediaDevices || !window.MediaRecorder) return toast('Audio recording is not available here.');
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+    chunks=[]; mr=new MediaRecorder(stream);
+    mr.ondataavailable=function(e){ if (e.data.size) chunks.push(e.data); };
+    mr.onstop=function(){ stream.getTracks().forEach(function(t){t.stop();}); var blob=new Blob(chunks,{type:mr.mimeType||'audio/mp4'}); mr=null;
+      btn.textContent='Record audio'; btn.classList.remove('rec','pulse');
+      var id=uid('au'); idb('audio','readwrite',function(s){ return s.put({blob:blob, ts:Date.now(), key:answerKey}, id); }).then(function(){ onDone(id, blob.size); }); };
+    mr.start(); btn.textContent='Stop recording'; btn.classList.add('rec','pulse');
+  }).catch(function(){ toast('Microphone permission was refused.'); });
+}
+function playAudio(id){ idb('audio','readonly',function(s){ return s.get(id); }).then(function(r){ if (!r) return toast('Clip not found.'); var a=new Audio(URL.createObjectURL(r.blob)); a.play(); }); }
+
+/* ---------- shell ---------- */
+function setTheme(){ document.documentElement.setAttribute('data-theme', S.settings.theme); document.documentElement.style.setProperty('--fs', S.settings.fs+'px'); }
+function go(view, patch){ S.ui.view=view; if (patch) for (var k in patch) S.ui[k]=patch[k]; save(); render(); }
+function render(){
+  var nav=document.getElementById('nav'), main=document.getElementById('main');
+  nav.innerHTML='';
+  VIEWS.forEach(function(v){ nav.appendChild(h('button',{class:S.ui.view===v[0]?'on':'',onclick:function(){go(v[0]);}}, h('span',{class:'ic',text:v[2]}), v[1])); });
+  main.innerHTML=''; var wrap=h('div',{class:'wrap'}); main.appendChild(wrap); main.scrollTop=0;
+  ({interview:vInterview,bible:vBible,scenes:vScenes,sparks:vSparks,map:vMap,sync:vSync})[S.ui.view](wrap);
+}
+function modal(build){
+  var m=h('div',{class:'modal',onclick:function(e){ if (e.target===m) close(); }}), sh=h('div',{class:'sheet'});
+  function close(){ m.remove(); }
+  m.appendChild(sh); build(sh, close); document.body.appendChild(m); return close;
+}
+
+/* ---------- Interview ---------- */
+function vInterview(root){
+  var q = S.ui.qid ? qById(S.ui.qid) : null;
+  if (!q){ q = nextQ(S.ui.stage); if (q){ S.ui.qid=q.id; S.ui.stage=q.stage; } }
+  if (!q){ root.appendChild(h('div',{class:'card'}, h('h2',{text:'Every question in the pack has an answer.'}), h('p',{class:'mute',text:'Open Backup, copy the brief for Claude at your next signal, and import the next round of questions. Or use Just talk, Sparks, and the Scenes board.'}), h('button',{class:'primary',onclick:function(){freeTalk();}},'Just talk'))); return; }
+  var st = allStages().filter(function(s){return s.id===q.stage;})[0] || {title:'',day:''};
+  var qs = stageQs(q.stage), idx = qs.indexOf(q), done = qs.filter(function(x){return S.qstatus[x.id]==='done';}).length;
+  root.appendChild(h('div',{class:'row between'},
+    h('div',null, h('div',{class:'kicker',text:(st.day?'Day '+st.day+' · ':'')+st.title}), h('div',{class:'xs mute',text:'Question '+(idx+1)+' of '+qs.length+' · '+done+' answered'})),
+    h('div',{class:'row'}, h('button',{class:'small',onclick:pickStage},'All questions'), h('button',{class:'small',onclick:function(){freeTalk();}},'Just talk'))));
+  var card=h('div',{class:'card'}); root.appendChild(card);
+  card.appendChild(h('div',{class:'q',text:q.q}));
+  if (q.why) card.appendChild(h('div',{class:'why',text:q.why}));
+  var prior = ansFor(q.id);
+  prior.forEach(function(a){ card.appendChild(answerBlock(a)); });
+  var ta=h('textarea',{rows:prior.length?5:9,placeholder:'Tap here, then the mic on the keyboard, and talk. Rambling is the point.',value:S.drafts[q.id]||''});
+  var wc=h('span',{class:'xs mute',text:words(ta.value)+' words'});
+  ta.addEventListener('input',function(){ S.drafts[q.id]=ta.value; wc.textContent=words(ta.value)+' words'; save(); });
+  card.appendChild(ta);
+  var extras=h('div',{class:'row',style:'margin-top:8px'});
+  if (S.settings.tts && window.speechSynthesis) extras.appendChild(h('button',{class:'small',onclick:function(){speak(q.q);}},'Read aloud'));
+  if (S.settings.listen && SR){ var lb=h('button',{class:'small',onclick:function(){listenInto(ta,lb);}},'Listen'); extras.appendChild(lb); }
+  var clips=[];
+  if (S.settings.audio){ var rb=h('button',{class:'small',onclick:function(){recordToggle(q.id,rb,function(id,size){ clips.push(id); toast('Clip saved ('+Math.round(size/1024)+' KB). It attaches when you save the answer.'); });}},'Record audio'); extras.appendChild(rb); }
+  extras.appendChild(h('span',{class:'grow'})); extras.appendChild(wc);
+  card.appendChild(extras);
+  card.appendChild(h('div',{class:'row',style:'margin-top:12px'},
+    h('button',{class:'primary',onclick:function(){
+      var t=ta.value.trim(); if (!t) return toast('Nothing to save yet.');
+      var a={id:uid('a'),qid:q.id,stage:q.stage,track:q.track,text:t,ts:Date.now(),kind:'answer',clips:clips.slice()};
+      commitAnswer(a, q); delete S.drafts[q.id]; S.qstatus[q.id]='done'; save(true); render();
+    }}, prior.length?'Save more':'Save answer'),
+    h('button',{onclick:function(){ S.qstatus[q.id]=S.qstatus[q.id]==='done'?'done':'later'; S.ui.qid=null; save(); render(); }},'Later'),
+    h('button',{class:'ghost',onclick:function(){ if (S.qstatus[q.id]!=='done') S.qstatus[q.id]='skipped'; S.ui.qid=null; save(); render(); }},'Not this book'),
+    h('span',{class:'grow'}),
+    prior.length ? h('button',{onclick:function(){ S.ui.qid=null; save(); render(); }},'Next question →') : null));
+  if (prior.length) root.appendChild(probePanel(q, prior));
+}
+function commitAnswer(a, q){
+  a.entities = mentions(a.text).map(function(e){return e.id;});
+  S.answers.push(a);
+  if (q && q.file){ var e=ent(q.file.id); if (e){ if (a.entities.indexOf(e.id)<0) a.entities.push(e.id);
+      var cur=(e.fields[q.file.field]||'').trim(); e.fields[q.file.field]=cur?cur+'\n\n'+a.text:a.text; a.filed=q.file; } }
+}
+function answerBlock(a){
+  var b=h('div',{style:'margin:.5em 0 .9em'});
+  b.appendChild(h('div',{class:'xs mute'}, (a.kind==='probe'?'Follow-up · ':'')+fmt(a.ts)+' · '+words(a.text)+' words', a.filed?(' · filed to '+((ent(a.filed.id)||{}).name||'')+' / '+a.filed.field):''));
+  if (a.prompt) b.appendChild(h('div',{class:'sm mute',style:'font-style:italic',text:a.prompt}));
+  b.appendChild(h('div',{class:'ans',text:a.text}));
+  var r=h('div',{class:'row'});
+  r.appendChild(h('button',{class:'small ghost',onclick:function(){ editAnswer(a); }},'Edit'));
+  r.appendChild(h('button',{class:'small ghost',onclick:function(){ a.star=!a.star; save(); render(); }}, a.star?'★ Starred':'☆ Star'));
+  r.appendChild(h('button',{class:'small ghost',onclick:function(){ sceneFrom(a); }},'Make a scene card'));
+  r.appendChild(h('button',{class:'small ghost',onclick:function(){ fileTo(a); }},'File to Bible'));
+  (a.clips||[]).forEach(function(c,i){ r.appendChild(h('button',{class:'small ghost',onclick:function(){playAudio(c);}},'▶ Clip '+(i+1))); });
+  b.appendChild(r); return b;
+}
+function editAnswer(a){
+  modal(function(sh, close){
+    var ta=h('textarea',{rows:12,value:a.text});
+    sh.appendChild(h('h2',{text:'Edit answer'})); sh.appendChild(ta);
+    sh.appendChild(h('div',{class:'row',style:'margin-top:10px'},
+      h('button',{class:'primary',onclick:function(){ a.text=ta.value.trim(); a.edited=Date.now(); a.entities=mentions(a.text).map(function(e){return e.id;}); save(true); close(); render(); }},'Save'),
+      h('button',{onclick:close},'Cancel'), h('span',{class:'grow'}),
+      h('button',{class:'danger ghost',onclick:function(){ if (ta.dataset.sure){ S.answers=S.answers.filter(function(x){return x!==a && x.parent!==a.id;}); if (!ansFor(a.qid).length && a.qid) delete S.qstatus[a.qid]; save(true); close(); render(); } else { ta.dataset.sure='1'; this.textContent='Tap again to delete'; } }},'Delete')));
+  });
+}
+function probePanel(q, prior){
+  var box=h('div',null), used=S.answers.filter(function(a){return a.parent && a.rootq===q.id;}).map(function(a){return a.prompt;});
+  var text=S.answers.filter(function(a){return a.qid===q.id || a.rootq===q.id;}).map(function(a){return a.text;}).join('\n');
+  var kids=S.answers.filter(function(a){return a.rootq===q.id && a.parent;});
+  if (kids.length){ var kc=h('div',{class:'card'}); kc.appendChild(h('div',{class:'kicker',text:'Follow-ups you answered'})); kids.forEach(function(a){ kc.appendChild(answerBlock(a)); }); box.appendChild(kc); }
+  var probes=analyze(q, text, used);
+  if (!probes.length) return box;
+  box.appendChild(h('div',{class:'kicker',style:'margin:6px 0',text:'Where your answer could go next'}));
+  probes.filter(function(p){return p.kind==='trip';}).concat(probes.filter(function(p){return p.kind!=='trip';}).slice(0,5)).forEach(function(p){
+    if (p.kind==='trip'){ box.appendChild(h('div',{class:'trip'}, h('b',null,'Your own rule: '), p.t)); return; }
+    var pb=h('div',{class:'probe'}), ta=h('textarea',{rows:4,placeholder:'Talk it through…',style:'display:none'});
+    var open=h('button',{class:'small',onclick:function(){ ta.style.display='block'; open.style.display='none'; sv.style.display=''; ta.focus(); if (S.settings.tts) speak(p.t); }},'Answer this');
+    var sv=h('button',{class:'small primary',style:'display:none',onclick:function(){ var t=ta.value.trim(); if (!t) return;
+      commitAnswer({id:uid('a'),qid:null,rootq:q.id,parent:prior[0].id,stage:q.stage,track:q.track,prompt:p.t,text:t,ts:Date.now(),kind:'probe'}, null); save(true); render(); }},'Save follow-up');
+    pb.appendChild(h('div',{class:'pq',text:p.t})); pb.appendChild(ta); pb.appendChild(h('div',{class:'row',style:'margin-top:6px'},open,sv));
+    box.appendChild(pb);
+  });
+  return box;
+}
+function pickStage(){
+  modal(function(sh, close){
+    sh.appendChild(h('div',{class:'row between'}, h('h2',{text:'All questions'}), h('button',{class:'small',onclick:close},'Close')));
+    allStages().forEach(function(st){
+      var qs=stageQs(st.id), d=qs.filter(function(x){return S.qstatus[x.id]==='done';}).length;
+      var det=h('details',{open:st.id===S.ui.stage}); det.appendChild(h('summary',null,(st.day?'Day '+st.day+' · ':'')+st.title+'  ('+d+'/'+qs.length+')'));
+      if (st.purpose) det.appendChild(h('div',{class:'hint',text:st.purpose}));
+      var l=h('div',{class:'list'});
+      qs.forEach(function(x){ var s=S.qstatus[x.id];
+        l.appendChild(h('div',{class:'item',onclick:function(){ S.ui.qid=x.id; S.ui.stage=x.stage; save(); close(); render(); }}, h('span',{class:'dot '+(s==='done'?'done':s==='later'?'later':s==='skipped'?'skip':'')}), h('span',{class:'sm',text:x.q}))); });
+      det.appendChild(l); sh.appendChild(det);
+    });
+  });
+}
+function freeTalk(prompt){
+  modal(function(sh, close){
+    var ta=h('textarea',{rows:12,placeholder:'Anything. An image, a worry, a line, an argument with yourself.',value:S.drafts.__free||''});
+    ta.addEventListener('input',function(){ S.drafts.__free=ta.value; save(); });
+    sh.appendChild(h('h2',{text:prompt||'Just talk'})); sh.appendChild(ta);
+    sh.appendChild(h('div',{class:'row',style:'margin-top:10px'},
+      h('button',{class:'primary',onclick:function(){ var t=ta.value.trim(); if (!t) return close();
+        commitAnswer({id:uid('a'),qid:null,stage:null,track:'free',prompt:prompt||null,text:t,ts:Date.now(),kind:'free'}, null); delete S.drafts.__free; save(true); close(); toast('Saved to the notebook.'); render(); }},'Save to notebook'),
+      h('button',{onclick:close},'Close')));
+    setTimeout(function(){ta.focus();},50);
+  });
+}
+function fileTo(a){
+  modal(function(sh, close){
+    sh.appendChild(h('h2',{text:'File this answer under…'}));
+    var sel=h('select',null), fsel=h('select',null);
+    S.entities.forEach(function(e){ sel.appendChild(h('option',{value:e.id,text:PACK.types[e.type].one+': '+e.name})); });
+    function fill(){ fsel.innerHTML=''; var e=ent(sel.value); (PACK.fields[e.type]||[]).forEach(function(f){ fsel.appendChild(h('option',{value:f.k,text:f.label})); }); }
+    sel.addEventListener('change',fill); fill();
+    sh.appendChild(sel); sh.appendChild(h('div',{style:'height:8px'})); sh.appendChild(fsel);
+    sh.appendChild(h('div',{class:'row',style:'margin-top:10px'}, h('button',{class:'primary',onclick:function(){ var e=ent(sel.value), k=fsel.value, cur=(e.fields[k]||'').trim(); e.fields[k]=cur?cur+'\n\n'+a.text:a.text; if ((a.entities||[]).indexOf(e.id)<0) (a.entities=a.entities||[]).push(e.id); save(true); close(); toast('Filed to '+e.name+'.'); }},'File it'), h('button',{onclick:close},'Cancel')));
+  });
+}
+function sceneFrom(a){
+  var sc={id:uid('sc'),title:'',what:a.text,want:'',turn:'',because:'',therefore:'',reveals:'',withheld:'',object:'',status:'idea',from:a.id};
+  S.scenes.push(sc); save(true); editScene(sc, true);
+}
+
+/* ---------- Bible ---------- */
+function vBible(root){
+  var types=Object.keys(PACK.types), tab=S.ui.btab;
+  var tabs=h('div',{class:'tabs'});
+  types.concat(['notebook']).forEach(function(t){ var n=t==='notebook'?S.answers.length:S.entities.filter(function(e){return e.type===t;}).length;
+    tabs.appendChild(h('button',{class:tab===t?'on':'',onclick:function(){ S.ui.btab=t; save(); render(); }}, (t==='notebook'?'Notebook':PACK.types[t].many)+' '+n)); });
+  root.appendChild(tabs);
+  if (tab==='notebook') return notebook(root);
+  root.appendChild(h('div',{class:'row between',style:'margin-bottom:10px'}, h('div',{class:'hint',text:PACK.types[tab].hint||''}), h('button',{class:'small primary',onclick:function(){ var e={id:uid('e'),type:tab,name:'',aliases:[],fields:{},ts:Date.now()}; S.entities.push(e); editEntity(e,true); }},'+ Add')));
+  var list=S.entities.filter(function(e){return e.type===tab;});
+  if (!list.length) root.appendChild(h('p',{class:'mute',text:'Nothing here yet.'}));
+  list.forEach(function(e){
+    var fs=PACK.fields[e.type]||[], filled=fs.filter(function(f){return (e.fields[f.k]||'').trim();}).length;
+    var n=S.answers.filter(function(a){return (a.entities||[]).indexOf(e.id)>=0;}).length;
+    var first=fs.map(function(f){return e.fields[f.k];}).filter(Boolean)[0]||'';
+    root.appendChild(h('div',{class:'card',style:'cursor:pointer',onclick:function(){editEntity(e);}},
+      h('div',{class:'row between'}, h('h3',null,e.name||'(unnamed) ', e.seeded?h('span',{class:'seed',text:'from your notes'}):null), h('span',{class:'xs mute',text:filled+'/'+fs.length+' fields · '+n+' mentions'})),
+      h('div',{class:'bar'},h('i',{style:'width:'+(fs.length?Math.round(100*filled/fs.length):0)+'%'})),
+      h('div',{class:'sm mute',style:'margin-top:6px',text:first.length>180?first.slice(0,180)+'…':first})));
+  });
+}
+function editEntity(e, isNew){
+  modal(function(sh, close){
+    var inputs={}, name=h('input',{value:e.name,placeholder:'Name'}), al=h('input',{value:(e.aliases||[]).join(', '),placeholder:'Other names I should recognise, comma separated'});
+    sh.appendChild(h('div',{class:'row between'}, h('div',{class:'kicker',text:PACK.types[e.type].one}), h('button',{class:'small',onclick:function(){ commit(); close(); render(); }},'Done')));
+    sh.appendChild(name); sh.appendChild(h('div',{style:'height:6px'})); sh.appendChild(al);
+    (PACK.fields[e.type]||[]).forEach(function(f){
+      sh.appendChild(h('label',{class:'f',text:f.label}));
+      if (f.ask) sh.appendChild(h('div',{class:'hint',text:f.ask.replace(/\{name\}/g, e.name||'this')}));
+      var ta=h('textarea',{rows:f.rows||2,value:e.fields[f.k]||''}); inputs[f.k]=ta; sh.appendChild(ta);
+    });
+    function commit(){ e.name=name.value.trim(); e.aliases=al.value.split(',').map(function(s){return s.trim();}).filter(Boolean); for (var k in inputs) e.fields[k]=inputs[k].value.trim(); if (!e.name && isNew && !Object.keys(e.fields).some(function(k){return e.fields[k];})) S.entities=S.entities.filter(function(x){return x!==e;}); save(true); }
+    sh.addEventListener('input',function(){ clearTimeout(sh._t); sh._t=setTimeout(commit,600); });
+    var src=S.answers.filter(function(a){return (a.entities||[]).indexOf(e.id)>=0;});
+    if (src.length){ var d=h('details',null,h('summary',null,'Everything you have said that mentions this ('+src.length+')')); src.forEach(function(a){ var q=a.qid&&qById(a.qid); d.appendChild(h('div',{style:'margin:.6em 0'}, h('div',{class:'xs mute',text:fmt(a.ts)+(q?' · '+q.q:a.prompt?' · '+a.prompt:'')}), h('div',{class:'ans sm',text:a.text}))); }); sh.appendChild(h('hr')); sh.appendChild(d); }
+    sh.appendChild(h('hr'));
+    sh.appendChild(h('button',{class:'danger ghost small',onclick:function(){ if (this.dataset.sure){ S.entities=S.entities.filter(function(x){return x!==e;}); save(true); close(); render(); } else { this.dataset.sure='1'; this.textContent='Tap again to delete'; } }},'Delete this entry'));
+  });
+}
+function notebook(root){
+  var f=S.ui.nfilter||'all';
+  var tabs=h('div',{class:'row',style:'margin-bottom:10px'});
+  [['all','Everything'],['star','Starred'],['free','Just talk'],['spark','Sparks']].forEach(function(x){ tabs.appendChild(h('button',{class:'chip'+(f===x[0]?' on':''),onclick:function(){ S.ui.nfilter=x[0]; render(); }},x[1])); });
+  var search=h('input',{placeholder:'Search everything you have said',value:S.ui.nsearch||''});
+  root.appendChild(search); root.appendChild(h('div',{style:'height:8px'})); root.appendChild(tabs);
+  var out=h('div',null); root.appendChild(out);
+  function draw(){ out.innerHTML=''; var s=(search.value||'').toLowerCase();
+    var list=S.answers.filter(function(a){ if (f==='star'&&!a.star) return false; if (f==='free'&&a.kind!=='free') return false; if (f==='spark'&&a.kind!=='spark') return false; return !s || a.text.toLowerCase().indexOf(s)>=0; }).slice().reverse();
+    if (!list.length) out.appendChild(h('p',{class:'mute',text:'Nothing yet.'}));
+    list.slice(0,200).forEach(function(a){ var q=(a.qid&&qById(a.qid))||(a.rootq&&qById(a.rootq)); var c=h('div',{class:'card'}); if (q) c.appendChild(h('div',{class:'sm mute',text:q.q})); c.appendChild(answerBlock(a)); out.appendChild(c); }); }
+  search.addEventListener('input',function(){ S.ui.nsearch=search.value; draw(); }); draw();
+}
+
+/* ---------- Scenes ---------- */
+var SFIELDS=[['title','Working title','A label only you need to understand.',1],['what','What happens','On camera. Who does what to whom, where.',4],['want','What he wants in this scene','Small and concrete: water, an answer, to not be seen.',2],['turn','What changes','What is different at the end than at the start? If nothing, why is it in the book?',2],['because','This happens because…','Which earlier scene or decision causes it?',2],['therefore','And therefore…','What does this scene make inevitable or impossible?',2],['reveals','What the reader learns','About the world or about him. One thing.',2],['withheld','What stays withheld','What the reader wants here and does not get.',2],['object','Object or image carrying it','The thing in the room that does the work.',1]];
+var STATUS=['idea','likely','locked','drafted','cut'];
+function vScenes(root){
+  var live=S.scenes.filter(function(s){return s.status!=='cut';});
+  var holes=live.filter(function(s,i){return i>0 && !(s.because||'').trim();}).length;
+  root.appendChild(h('div',{class:'row between',style:'margin-bottom:10px'},
+    h('div',null,h('h2',{text:'Scene board'}),h('div',{class:'xs mute',text:live.length+' scenes · '+holes+' joined only by "and then"'})),
+    h('button',{class:'primary',onclick:function(){ var sc={id:uid('sc'),title:'',what:'',status:'idea'}; S.scenes.push(sc); editScene(sc,true); }},'+ Scene')));
+  if (!S.scenes.length) root.appendChild(h('p',{class:'mute',text:'No scenes yet. Day 3 builds this list.'}));
+  var n=0;
+  S.scenes.forEach(function(s, i){
+    if (s.status==='cut'){ root.appendChild(h('div',{class:'sm mute',style:'margin:0 0 10px 28px;text-decoration:line-through;cursor:pointer',onclick:function(){editScene(s);}},s.title||s.what.slice(0,60))); return; }
+    n++;
+    if (n>1) root.appendChild(h('div',{class:'link'+((s.because||'').trim()?'':' bad')}, (s.because||'').trim()?'↓ because: '+s.because:'↓ and then… (no cause yet)'));
+    root.appendChild(h('div',{class:'card scene'},
+      h('div',{class:'row',style:'align-items:flex-start;flex-wrap:nowrap'},
+        h('div',{class:'num',text:n}),
+        h('div',{class:'grow',style:'cursor:pointer',onclick:function(){editScene(s);}},
+          h('h3',null,s.title||'(untitled) ', s.seeded?h('span',{class:'seed',text:'from your notes'}):null),
+          h('div',{class:'sm',text:(s.what||'').length>220?s.what.slice(0,220)+'…':s.what||''}),
+          h('div',{class:'row',style:'margin-top:6px'}, h('span',{class:'chip',text:s.status}), s.turn?h('span',{class:'chip',text:'turns'}):h('span',{class:'chip',style:'color:var(--warn)',text:'no turn yet'}), s.object?h('span',{class:'chip',text:s.object.slice(0,28)}):null)),
+        h('div',{style:'display:flex;flex-direction:column;gap:4px'},
+          h('button',{class:'small',disabled:i===0,onclick:function(){ S.scenes.splice(i-1,0,S.scenes.splice(i,1)[0]); save(); render(); }},'↑'),
+          h('button',{class:'small',disabled:i===S.scenes.length-1,onclick:function(){ S.scenes.splice(i+1,0,S.scenes.splice(i,1)[0]); save(); render(); }},'↓')))));
+  });
+}
+function editScene(s, isNew){
+  modal(function(sh, close){
+    var inputs={};
+    sh.appendChild(h('div',{class:'row between'}, h('div',{class:'kicker',text:'Scene card'}), h('button',{class:'small',onclick:function(){ commit(); close(); render(); }},'Done')));
+    var st=h('div',{class:'row',style:'margin:8px 0'});
+    STATUS.forEach(function(x){ st.appendChild(h('button',{class:'chip'+(s.status===x?' on':''),onclick:function(){ s.status=x; Array.prototype.forEach.call(st.children,function(c){c.className='chip'+(c.textContent===x?' on':'');}); save(); }},x)); });
+    sh.appendChild(st);
+    SFIELDS.forEach(function(f){ sh.appendChild(h('label',{class:'f',text:f[1]})); sh.appendChild(h('div',{class:'hint',text:f[2]})); var el=f[3]===1?h('input',{value:s[f[0]]||''}):h('textarea',{rows:f[3],value:s[f[0]]||''}); inputs[f[0]]=el; sh.appendChild(el); });
+    function commit(){ for (var k in inputs) s[k]=inputs[k].value.trim(); if (isNew && !s.title && !s.what) S.scenes=S.scenes.filter(function(x){return x!==s;}); save(true); }
+    sh.addEventListener('input',function(){ clearTimeout(sh._t); sh._t=setTimeout(commit,600); });
+    sh.appendChild(h('hr'));
+    sh.appendChild(h('button',{class:'danger ghost small',onclick:function(){ if (this.dataset.sure){ S.scenes=S.scenes.filter(function(x){return x!==s;}); save(true); close(); render(); } else { this.dataset.sure='1'; this.textContent='Tap again to delete'; } }},'Delete scene'));
+  });
+}
+
+/* ---------- Sparks ---------- */
+function vSparks(root){
+  var all=allSparks(), open=all.filter(function(s){return !S.sparkState[s.id];});
+  var cur = all.filter(function(s){return s.id===S.ui.spark;})[0];
+  if (!cur || S.sparkState[cur.id]){ cur = open[Math.floor(Math.random()*open.length)]; S.ui.spark=cur?cur.id:null; }
+  root.appendChild(h('div',{class:'row between'}, h('h2',{text:'Sparks'}), h('span',{class:'xs mute',text:open.length+' left of '+all.length})));
+  root.appendChild(h('p',{class:'hint',text:'What-ifs to push against, built from your own notes and old stories. None of them is the answer. Saying why one is wrong is as useful as taking it.'}));
+  if (!cur){ root.appendChild(h('p',{class:'mute',text:'You have been through the whole deck.'})); return; }
+  var ta=h('textarea',{rows:5,placeholder:'React out loud. Why yes, why no, what it makes you think of instead.'});
+  function verdict(v){ return function(){ S.sparkState[cur.id]=v; var t=ta.value.trim(); if (t) commitAnswer({id:uid('a'),qid:null,stage:null,track:cur.track||'spark',prompt:'Spark ('+v+'): '+cur.t,text:t,ts:Date.now(),kind:'spark',star:v==='take'}, null); S.ui.spark=null; save(true); render(); }; }
+  root.appendChild(h('div',{class:'card'}, h('div',{class:'kicker',text:cur.track||'what if'}), h('div',{class:'spark',text:cur.t}), ta,
+    h('div',{class:'row',style:'margin-top:10px'}, h('button',{class:'primary',onclick:verdict('take')},'Take it'), h('button',{onclick:verdict('twist')},'Twist it'), h('button',{onclick:verdict('reject')},'Not this book'), h('span',{class:'grow'}), h('button',{class:'ghost',onclick:function(){ S.ui.spark=null; render(); }},'Shuffle'))));
+}
+
+/* ---------- Progress ---------- */
+function vMap(root){
+  var total=0; S.answers.forEach(function(a){ total+=words(a.text); });
+  root.appendChild(h('h2',{text:PACK.title}));
+  root.appendChild(h('div',{class:'grid2'},
+    stat(total.toLocaleString(),'words spoken'), stat(S.answers.length,'answers saved'),
+    stat(S.scenes.filter(function(s){return s.status!=='cut';}).length,'scenes on the board'), stat(S.entities.filter(function(e){return e.type==='thread' && !/resolved|closed/i.test(e.fields.status||'');}).length,'open threads')));
+  PACK.days.forEach(function(d){
+    var c=h('div',{class:'card'}); c.appendChild(h('div',{class:'kicker',text:'Day '+d.n})); c.appendChild(h('h3',{text:d.title})); c.appendChild(h('div',{class:'sm mute',style:'margin-bottom:8px',text:d.blurb}));
+    allStages().filter(function(s){return s.day===d.n;}).forEach(function(st){ var qs=stageQs(st.id), dn=qs.filter(function(x){return S.qstatus[x.id]==='done';}).length;
+      c.appendChild(h('div',{style:'margin:8px 0;cursor:pointer',onclick:function(){ go('interview',{stage:st.id,qid:null}); }}, h('div',{class:'row between sm'}, h('span',{text:st.title}), h('span',{class:'mute',text:dn+'/'+qs.length})), h('div',{class:'bar'},h('i',{style:'width:'+(qs.length?100*dn/qs.length:0)+'%'})))); });
+    if (d.exit) c.appendChild(h('div',{class:'hint',text:'Done when: '+d.exit}));
+    root.appendChild(c);
+  });
+  var extra=allStages().filter(function(s){return !s.day;});
+  if (extra.length){ var c2=h('div',{class:'card'}); c2.appendChild(h('div',{class:'kicker',text:'Imported rounds'})); extra.forEach(function(st){ var qs=stageQs(st.id), dn=qs.filter(function(x){return S.qstatus[x.id]==='done';}).length; c2.appendChild(h('div',{class:'row between sm',style:'margin:6px 0;cursor:pointer',onclick:function(){ go('interview',{stage:st.id,qid:null}); }}, h('span',{text:st.title}), h('span',{class:'mute',text:dn+'/'+qs.length}))); }); root.appendChild(c2); }
+  var thin=[]; S.entities.forEach(function(e){ (PACK.fields[e.type]||[]).forEach(function(f){ if (f.core && !(e.fields[f.k]||'').trim()) thin.push(e.name+': '+f.label.toLowerCase()); }); });
+  var c3=h('div',{class:'card'}); c3.appendChild(h('div',{class:'kicker',text:'Thin spots'}));
+  if (!thin.length) c3.appendChild(h('div',{class:'sm mute',text:'No core fields are empty.'}));
+  thin.slice(0,14).forEach(function(t){ c3.appendChild(h('div',{class:'sm',text:'• '+t})); });
+  if (thin.length>14) c3.appendChild(h('div',{class:'xs mute',text:'and '+(thin.length-14)+' more'}));
+  root.appendChild(c3);
+}
+function stat(n,l){ return h('div',{class:'card',style:'margin:0 0 10px'}, h('div',{style:'font-family:var(--serif);font-size:1.7em',text:n}), h('div',{class:'xs mute',text:l})); }
+
+/* ---------- Backup, brief, import, settings ---------- */
+function bibleMarkdown(sinceTs){
+  var o=['# '+PACK.title+': story bible', '_Exported '+new Date().toString()+'_', ''];
+  Object.keys(PACK.types).forEach(function(t){ var list=S.entities.filter(function(e){return e.type===t;}); if (!list.length) return;
+    o.push('## '+PACK.types[t].many,'');
+    list.forEach(function(e){ o.push('### '+(e.name||'(unnamed)')+(e.seeded?' _(from earlier notes)_':'')); (PACK.fields[t]||[]).forEach(function(f){ var v=(e.fields[f.k]||'').trim(); if (v) o.push('**'+f.label+':** '+v.replace(/\n+/g,'\n')); }); o.push(''); }); });
+  o.push('## Scene board','');
+  var n=0; S.scenes.forEach(function(s){ if (s.status==='cut') return; n++; o.push('### '+n+'. '+(s.title||'(untitled)')+' ['+s.status+']'); SFIELDS.slice(1).forEach(function(f){ var v=(s[f[0]]||'').trim(); if (v) o.push('**'+f[1]+':** '+v); }); o.push(''); });
+  var cut=S.scenes.filter(function(s){return s.status==='cut';}); if (cut.length){ o.push('**Cut:** '+cut.map(function(s){return s.title||s.what.slice(0,40);}).join('; '),''); }
+  o.push('## Interview transcript'+(sinceTs?' (since '+fmt(sinceTs)+')':''),'');
+  var qs=allQuestions(), stages=allStages();
+  stages.forEach(function(st){ var block=[]; qs.filter(function(q){return q.stage===st.id;}).forEach(function(q){
+      var as=S.answers.filter(function(a){return (a.qid===q.id||a.rootq===q.id) && (!sinceTs||a.ts>sinceTs);}); if (!as.length) return;
+      block.push('**Q: '+q.q+'**'); as.forEach(function(a){ block.push((a.prompt?'_Follow-up: '+a.prompt+'_\n':'')+(a.star?'★ ':'')+a.text,''); }); });
+    if (block.length){ o.push('### '+st.title,''); o=o.concat(block); } });
+  var loose=S.answers.filter(function(a){return !a.qid && !a.rootq && (!sinceTs||a.ts>sinceTs);});
+  if (loose.length){ o.push('### Notebook and sparks',''); loose.forEach(function(a){ o.push((a.prompt?'_'+a.prompt+'_\n':'')+(a.star?'★ ':'')+a.text,''); }); }
+  var skipped=qs.filter(function(q){return S.qstatus[q.id]==='skipped';}); if (skipped.length){ o.push('### Questions marked "not this book"',''); skipped.forEach(function(q){ o.push('- '+q.q); }); o.push(''); }
+  var rej=allSparks().filter(function(s){return S.sparkState[s.id]==='reject';}); if (rej.length){ o.push('### Sparks rejected',''); rej.forEach(function(s){ o.push('- '+s.t); }); }
+  return o.join('\n');
+}
+function brief(){ return PACK.briefPrompt+'\n\n---\n\n'+bibleMarkdown(S.lastBrief||0); }
+function download(name, text, type){
+  var blob=new Blob([text],{type:type||'text/plain'});
+  try { var file=new File([blob],name,{type:blob.type}); if (navigator.canShare && navigator.canShare({files:[file]})){ navigator.share({files:[file],title:name}).catch(function(){}); return; } } catch(e){}
+  try { var a=h('a',{href:URL.createObjectURL(blob),download:name}); document.body.appendChild(a); a.click(); setTimeout(function(){a.remove();},500); } catch(e){ showText(name,text); }
+}
+function copy(text, label){
+  function fb(){ showText(label,text); }
+  try { navigator.clipboard.writeText(text).then(function(){ toast(label+' copied.'); }, fb); } catch(e){ fb(); }
+}
+function showText(title, text){ modal(function(sh, close){ sh.appendChild(h('div',{class:'row between'},h('h2',{text:title}),h('button',{class:'small',onclick:close},'Close'))); sh.appendChild(h('p',{class:'hint',text:'Tap inside, Select All, Copy.'})); var ta=h('textarea',{rows:16,value:text}); sh.appendChild(ta); setTimeout(function(){ta.focus();ta.select();},50); }); }
+function vSync(root){
+  var stamp=new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
+  var age=S.lastBackup?Math.round((Date.now()-S.lastBackup)/3600000):null;
+  root.appendChild(h('h2',{text:'Backup and sync'}));
+  root.appendChild(h('div',{class:'card'}, h('div',{class:'kicker',text:'1 · Back up (do this every evening)'}),
+    h('p',{class:'sm',text:'Everything lives on this iPad only. A backup file saved to Files is your insurance.'}),
+    h('p',{class:'sm '+(age==null||age>20?'rec':'mute'),text:age==null?'No backup yet.':'Last backup '+age+' hours ago.'}),
+    h('div',{class:'row'}, h('button',{class:'primary',onclick:function(){ S.lastBackup=Date.now(); save(true); download('storydesk-'+PACK.project+'-'+stamp+'.json', JSON.stringify(S), 'application/json'); render(); }},'Save backup file'),
+      h('button',{onclick:function(){ S.lastBackup=Date.now(); save(true); copy(JSON.stringify(S),'Backup'); }},'Copy backup'),
+      h('button',{onclick:function(){ download(PACK.project+'-story-bible-'+stamp+'.md', bibleMarkdown(0), 'text/markdown'); }},'Export readable bible'))));
+  root.appendChild(h('div',{class:'card'}, h('div',{class:'kicker',text:'2 · When you have signal: get the next round'}),
+    h('p',{class:'sm',text:'Copies your new answers plus the bible, with instructions asking Claude to act as editor: name contradictions and thin spots, write no prose, and return a new question pack. Paste it into Claude, then paste the reply below.'}),
+    h('div',{class:'row'}, h('button',{class:'primary',onclick:function(){ copy(brief(),'Brief'); S.lastBrief=Date.now(); save(); }},'Copy brief for Claude'), h('button',{onclick:function(){ S.lastBrief=0; save(); toast('Next brief will include everything.'); }},'Reset: send everything next time'))));
+  var imp=h('textarea',{rows:5,placeholder:'Paste a question pack (JSON) or a backup here'});
+  root.appendChild(h('div',{class:'card'}, h('div',{class:'kicker',text:'3 · Import'}), imp,
+    h('div',{class:'row',style:'margin-top:8px'}, h('button',{onclick:function(){ doImport(imp.value); }},'Import pasted text'),
+      h('label',{class:'chip',style:'cursor:pointer;min-height:44px;padding:.5em 1em'},'Choose a file', h('input',{type:'file',accept:'.json,application/json,text/plain',style:'display:none',onchange:function(ev){ var f=ev.target.files[0]; if (!f) return; var r=new FileReader(); r.onload=function(){ doImport(String(r.result)); }; r.readAsText(f); }})))));
+  var set=h('div',{class:'card'}); set.appendChild(h('div',{class:'kicker',text:'Settings'}));
+  function tog(label,key,note){ set.appendChild(h('div',{class:'row between',style:'margin:8px 0'}, h('div',null,h('div',{class:'sm',text:label}), note?h('div',{class:'xs mute',text:note}):null), h('button',{class:'chip'+(S.settings[key]?' on':''),onclick:function(){ S.settings[key]=!S.settings[key]; save(); render(); }},S.settings[key]?'On':'Off'))); }
+  set.appendChild(h('div',{class:'row between',style:'margin:8px 0'}, h('div',{class:'sm',text:'Night mode'}), h('button',{class:'chip'+(S.settings.theme==='dark'?' on':''),onclick:function(){ S.settings.theme=S.settings.theme==='dark'?'light':'dark'; setTheme(); save(); render(); }},S.settings.theme==='dark'?'On':'Off')));
+  set.appendChild(h('div',{class:'row between',style:'margin:8px 0'}, h('div',{class:'sm',text:'Text size'}), h('div',{class:'row'}, h('button',{class:'small',onclick:function(){ S.settings.fs=Math.max(14,S.settings.fs-1); setTheme(); save(); }},'A−'), h('button',{class:'small',onclick:function(){ S.settings.fs=Math.min(26,S.settings.fs+1); setTheme(); save(); }},'A+'))));
+  tog('Read questions aloud','tts','Adds a Read aloud button and speaks follow-ups.');
+  tog('In-app Listen button','listen',SR?'Experimental. The keyboard mic is the reliable path.':'Not supported in this browser.');
+  tog('Keep an audio clip with answers','audio','Stores your actual voice on this iPad. Clips are not in the backup file.');
+  root.appendChild(set);
+  var dz=h('details',null,h('summary',null,'Recovery and reset'));
+  dz.appendChild(h('button',{class:'small',onclick:function(){ var out=[]; var p=[]; for (var i=0;i<12;i++) (function(i){ p.push(idb('kv','readonly',function(s){return s.get('snap:'+i);}).then(function(v){ if (v) out.push(v); })); })(i);
+    Promise.all(p).then(function(){ if (!out.length) return toast('No automatic copies yet.'); out.sort(function(a,b){return b.saved-a.saved;}); modal(function(sh,close){ sh.appendChild(h('h2',{text:'Automatic copies'})); out.forEach(function(v){ sh.appendChild(h('div',{class:'row between',style:'margin:8px 0'}, h('span',{class:'sm',text:fmt(v.saved)+' · '+v.answers.length+' answers'}), h('button',{class:'small',onclick:function(){ S=v; migrate(); save(true); close(); render(); toast('Restored.'); }},'Restore'))); }); sh.appendChild(h('button',{onclick:close},'Close')); }); }); }},'Restore an automatic copy'));
+  dz.appendChild(h('span',{text:' '}));
+  dz.appendChild(h('button',{class:'small danger',onclick:function(){ if (this.dataset.n==='2'){ S=fresh(); save(true); setTheme(); render(); toast('Reset to the starting state.'); } else { this.dataset.n=String((+this.dataset.n||0)+1); this.textContent=this.dataset.n==='1'?'This erases every answer. Tap again.':'Last chance. Tap to erase.'; } }},'Erase everything and start over'));
+  root.appendChild(dz);
+  root.appendChild(h('p',{class:'xs mute',style:'margin-top:14px',text:'Story Desk · pack '+PACK.id+' · '+(db?'IndexedDB + local mirror':'local storage only')+' · '+(navigator.onLine?'online':'offline')+(window.__SW__?' · '+window.__SW__:'')}));
+}
+function doImport(text){
+  text=(text||'').trim(); var m=text.match(/```(?:json)?\s*([\s\S]*?)```/); if (m) text=m[1].trim();
+  var a=text.indexOf('{'), b=text.lastIndexOf('}'); if (a<0||b<0) return toast('I could not find JSON in that.');
+  var o; try { o=JSON.parse(text.slice(a,b+1)); } catch(e){ return toast('That JSON does not parse: '+e.message.slice(0,60)); }
+  if (o.answers && o.entities && o.qstatus){ // full backup
+    modal(function(sh,close){ sh.appendChild(h('h2',{text:'Replace everything with this backup?'})); sh.appendChild(h('p',{class:'sm',text:'It holds '+o.answers.length+' answers, saved '+fmt(o.saved||o.created)+'. What is on this iPad now has '+S.answers.length+' answers.'}));
+      sh.appendChild(h('div',{class:'row'}, h('button',{class:'primary',onclick:function(){ S=o; migrate(); save(true); setTheme(); close(); render(); toast('Backup restored.'); }},'Replace'), h('button',{onclick:close},'Cancel'))); });
+    return;
+  }
+  if (Array.isArray(o.questions)){
+    var pid=o.id||uid('pack'), sid='imp-'+pid, n=0, have={};
+    allQuestions().forEach(function(q){ have[q.id]=1; });
+    var known={}; allStages().forEach(function(s){ known[s.id]=1; });
+    var pack={id:pid, stages:[{id:sid,title:o.title||('Round '+(S.packs.length+2)),purpose:o.note||''}], questions:[], sparks:[]};
+    o.questions.forEach(function(q,i){ if (!q || !q.q) return; var id=pid+'-q'+i; if (have[id]) return;
+      pack.questions.push({id:id, stage:(q.stage&&known[q.stage])?q.stage:sid, track:q.track||'plot', q:String(q.q), why:q.why?String(q.why):'', probes:Array.isArray(q.probes)?q.probes.map(String):[]}); n++; });
+    (o.sparks||[]).forEach(function(s,i){ var t=typeof s==='string'?s:s.t; if (t) pack.sparks.push({id:pid+'-s'+i,t:String(t),track:(s&&s.track)||'what if'}); });
+    if (!n && !pack.sparks.length) return toast('Nothing new in that pack.');
+    S.packs.push(pack); save(true); toast('Imported '+n+' questions and '+pack.sparks.length+' sparks.'); go('interview',{stage:sid,qid:null});
+    return;
+  }
+  toast('That is JSON, but not a backup or a question pack.');
+}
+
+/* ---------- boot ---------- */
+load().then(function(){ setTheme(); render(); });
+document.addEventListener('visibilitychange',function(){ if (document.hidden) save(true); });
+window.addEventListener('pagehide',function(){ try { S.saved=Date.now(); localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} });
+window.__desk={ state:function(){return S;}, analyze:analyze, brief:brief, md:bibleMarkdown };
+})();
+</script>
+</body>
+</html>
